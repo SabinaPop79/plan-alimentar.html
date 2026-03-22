@@ -3,701 +3,761 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Plan Alimentar — O Lună</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>NutriPlan — Plan Alimentar Personalizat</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --sage:#3D7A57;--sage-dk:#1E4D35;--sage-lt:#EBF5EE;
+  --sage:#3D7A57;--sage-dk:#1E4D35;--sage-lt:#EBF5EE;--sage-md:#2D6347;
   --rose:#C0604A;--rose-lt:#FBF0ED;
-  --amber:#B07B12;--amber-lt:#FBF3E2;
+  --amber:#A06B10;--amber-lt:#FBF3E2;
   --plum:#6B4C8A;--plum-lt:#F3EEF9;
+  --gold:#B8860B;
   --bg:#F9F6F1;--card:#FFFFFF;
   --txt:#1A1916;--muted:#7A7570;--faint:#EDE9E3;--border:#E4DDD5;
-  --r:14px
+  --r:14px;--r-sm:8px
 }
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:calc(40px + env(safe-area-inset-bottom,0))}
-
-/* ── HEADER ── */
-.hdr{background:var(--sage-dk);padding:calc(44px + env(safe-area-inset-top,0)) 20px 22px;position:relative;overflow:hidden}
-.hdr::before,.hdr::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.04)}
-.hdr::before{width:200px;height:200px;right:-50px;top:-60px}
-.hdr::after{width:120px;height:120px;right:30px;bottom:-50px}
-.hdr-eyebrow{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:6px}
-.hdr h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:#fff;line-height:1.15;margin-bottom:8px}
-.hdr h1 em{font-style:italic;font-weight:400}
-.hdr-desc{font-size:12px;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:16px}
-.hdr-pills{display:flex;gap:8px;flex-wrap:wrap}
-.hdr-pill{font-size:10px;font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
-
-/* ── WEEK TABS ── */
-.week-tabs{background:var(--sage-dk);padding:10px 16px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.week-tabs::-webkit-scrollbar{display:none}
-.wtab{flex-shrink:0;padding:9px 18px 12px;border-radius:10px 10px 0 0;border:none;background:transparent;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .2s;white-space:nowrap}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+ 
+/* ══════════════════════════════════════
+   ONBOARDING SCREEN
+══════════════════════════════════════ */
+#onboarding{
+  min-height:100vh;
+  background:linear-gradient(160deg,var(--sage-dk) 0%,#2a5c40 50%,#1a3d2a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 20px calc(40px + env(safe-area-inset-bottom,0));
+  position:relative;overflow:hidden
+}
+#onboarding::before{
+  content:'';position:absolute;width:400px;height:400px;
+  border-radius:50%;background:rgba(255,255,255,.03);
+  top:-100px;right:-100px
+}
+#onboarding::after{
+  content:'';position:absolute;width:250px;height:250px;
+  border-radius:50%;background:rgba(255,255,255,.03);
+  bottom:-80px;left:-60px
+}
+ 
+.ob-logo{
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:400;
+  letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.5);
+  margin-bottom:32px
+}
+.ob-title{
+  font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;
+  color:#fff;text-align:center;line-height:1.15;margin-bottom:8px
+}
+.ob-title em{font-style:italic;font-weight:400;color:#9FE1CB}
+.ob-sub{
+  font-size:13px;color:rgba(255,255,255,.55);text-align:center;
+  line-height:1.7;margin-bottom:36px;max-width:300px
+}
+ 
+.ob-card{
+  background:rgba(255,255,255,.07);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);border-radius:20px;
+  padding:28px 24px;width:100%;max-width:400px
+}
+ 
+.ob-step{display:none}
+.ob-step.on{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ 
+.ob-step-label{
+  font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:6px
+}
+.ob-step-title{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;
+  color:#fff;margin-bottom:20px;line-height:1.3
+}
+ 
+/* Form elements */
+.ob-row{display:flex;gap:10px;margin-bottom:14px}
+.ob-field{flex:1;display:flex;flex-direction:column;gap:5px}
+.ob-field label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.ob-field input,.ob-field select{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;padding:12px 14px;font-size:15px;font-family:'Outfit',sans-serif;
+  color:#fff;outline:none;transition:border .2s;width:100%
+}
+.ob-field input::placeholder{color:rgba(255,255,255,.3)}
+.ob-field input:focus,.ob-field select:focus{border-color:rgba(255,255,255,.4)}
+.ob-field select option{background:#1E4D35;color:#fff}
+ 
+/* Gender toggle */
+.gender-toggle{display:flex;gap:8px;margin-bottom:14px}
+.gender-btn{
+  flex:1;padding:12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.15);
+  background:transparent;color:rgba(255,255,255,.6);font-family:'Outfit',sans-serif;
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center
+}
+.gender-btn.on{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);color:#fff}
+ 
+/* Activity & goal options */
+.ob-options{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.ob-opt{
+  padding:12px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.12);
+  background:transparent;color:rgba(255,255,255,.6);font-family:'Outfit',sans-serif;
+  font-size:13px;cursor:pointer;transition:all .2s;text-align:left;
+  display:flex;align-items:center;gap:10px
+}
+.ob-opt .ob-opt-icon{font-size:18px;width:28px;text-align:center}
+.ob-opt.on{background:rgba(159,225,203,.15);border-color:#9FE1CB;color:#fff}
+.ob-opt .ob-opt-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+ 
+/* Post preference */
+.post-info{
+  background:rgba(159,225,203,.1);border:1px solid rgba(159,225,203,.2);
+  border-radius:10px;padding:12px 14px;margin-bottom:14px;
+  font-size:12px;color:rgba(255,255,255,.7);line-height:1.5
+}
+ 
+/* Progress bar */
+.ob-progress{display:flex;gap:5px;margin-bottom:24px}
+.ob-prog-dot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,.15);transition:background .3s}
+.ob-prog-dot.on{background:#9FE1CB}
+ 
+/* Buttons */
+.ob-btn{
+  width:100%;padding:15px;border-radius:12px;border:none;
+  background:#9FE1CB;color:var(--sage-dk);font-family:'Outfit',sans-serif;
+  font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px
+}
+.ob-btn:hover{background:#7ED4B8;transform:translateY(-1px)}
+.ob-btn-sec{
+  width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.2);
+  background:transparent;color:rgba(255,255,255,.6);font-family:'Outfit',sans-serif;
+  font-size:13px;cursor:pointer;margin-top:8px
+}
+ 
+/* Results card */
+.ob-results{text-align:center;padding:8px 0}
+.ob-results .big-num{
+  font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:700;
+  color:#9FE1CB;line-height:1
+}
+.ob-results .big-unit{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:16px}
+.ob-results-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.ob-res-chip{
+  background:rgba(255,255,255,.08);border-radius:10px;padding:12px 8px;
+  text-align:center
+}
+.ob-res-chip .v{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#fff}
+.ob-res-chip .l{font-size:9px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.ob-timeline{
+  background:rgba(255,255,255,.06);border-radius:10px;padding:14px;
+  font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;margin-top:8px;text-align:left
+}
+ 
+/* ══════════════════════════════════════
+   MAIN APP
+══════════════════════════════════════ */
+#app{display:none}
+ 
+.app-hdr{
+  background:var(--sage-dk);
+  padding:calc(44px + env(safe-area-inset-top,0)) 20px 18px;
+  position:relative;overflow:hidden
+}
+.app-hdr::before{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04);right:-40px;top:-50px}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.hdr-greeting{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px}
+.hdr-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#fff;line-height:1.2}
+.hdr-reset{
+  padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.2);
+  background:transparent;color:rgba(255,255,255,.6);font-size:10px;font-weight:500;
+  font-family:'Outfit',sans-serif;cursor:pointer;white-space:nowrap
+}
+.hdr-stats{display:flex;gap:10px}
+.hdr-stat{
+  flex:1;background:rgba(255,255,255,.08);border-radius:10px;padding:10px 8px;text-align:center
+}
+.hdr-stat .sv{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:#fff}
+.hdr-stat .sl{font-size:9px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+ 
+/* Week tabs */
+.week-wrap{background:var(--sage-dk);padding:10px 16px 0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.week-wrap::-webkit-scrollbar{display:none}
+.wtab{
+  flex-shrink:0;padding:8px 16px 12px;border-radius:9px 9px 0 0;border:none;
+  background:transparent;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;
+  color:rgba(255,255,255,.4);cursor:pointer;transition:all .2s;white-space:nowrap
+}
 .wtab.on{background:var(--bg);color:var(--txt)}
-
-/* ── WEEK VIEW ── */
-.wview{display:none}
-.wview.on{display:block}
-
-/* ── DAY NAV ── */
-.day-nav{background:var(--bg);padding:14px 16px 10px;border-bottom:1px solid var(--border);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+ 
+/* Week/Day views */
+.wview{display:none}.wview.on{display:block}
+.day-nav{
+  background:var(--bg);padding:12px 16px 8px;border-bottom:1px solid var(--border);
+  display:flex;gap:5px;overflow-x:auto;scrollbar-width:none
+}
 .day-nav::-webkit-scrollbar{display:none}
-.dpill{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 12px 10px;border-radius:10px;border:1.5px solid transparent;background:transparent;cursor:pointer;transition:all .2s}
+.dpill{
+  flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:7px 11px 9px;border-radius:9px;border:1.5px solid transparent;
+  background:transparent;cursor:pointer;transition:all .2s
+}
 .dpill.on{background:var(--card);border-color:var(--border)}
-.dpill .da{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.dpill .da{font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
 .dpill.on .da{color:var(--txt)}
-.dpill .dn{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;line-height:1;color:var(--muted)}
+.dpill .dn{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--muted)}
 .dpill.on .dn{color:var(--txt)}
 .dpill .dt{width:5px;height:5px;border-radius:50%;margin-top:2px}
-.dpill .dt.p{background:#7EC8A0}
-.dpill .dt.n{background:#E8A87C}
-
-/* ── CONTENT ── */
-.content{padding:16px}
-.dview{display:none;animation:fi .2s ease}
-.dview.on{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-.day-top{margin-bottom:16px}
-.dtype{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:10px}
+.dpill .dt.p{background:#7EC8A0}.dpill .dt.n{background:#E8A87C}
+ 
+/* Day content */
+.content{padding:14px 16px 80px}
+.dview2{display:none;animation:fi .2s ease}.dview2.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+ 
+.day-top{margin-bottom:14px}
+.dtype{
+  display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:20px;margin-bottom:8px
+}
 .dtype.post{background:var(--sage-lt);color:var(--sage-dk)}
 .dtype.norm{background:#FFF3EC;color:#8B3A20}
-.dtype::before{content:'';width:6px;height:6px;border-radius:50%}
-.dtype.post::before{background:var(--sage)}
-.dtype.norm::before{background:var(--rose)}
-.kcal-n{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;line-height:1;color:var(--txt)}
-.kcal-u{font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:10px}
-.post-note{background:var(--sage-lt);border:1px solid #A8D5BB;border-radius:10px;padding:10px 13px;font-size:12px;color:var(--sage-dk);line-height:1.5;margin-bottom:14px}
-
-.sec-hdr{display:flex;align-items:center;gap:10px;margin:16px 0 10px;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.dtype::before{content:'';width:5px;height:5px;border-radius:50%}
+.dtype.post::before{background:var(--sage)}.dtype.norm::before{background:var(--rose)}
+ 
+.kcal-day{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;line-height:1}
+.kcal-budget{
+  display:flex;align-items:center;gap:8px;margin:4px 0 10px;
+  font-size:11px;color:var(--muted)
+}
+.budget-bar{flex:1;height:4px;background:var(--faint);border-radius:2px;overflow:hidden}
+.budget-fill{height:100%;background:var(--sage);border-radius:2px;transition:width .5s}
+ 
+.post-note{
+  background:var(--sage-lt);border:1px solid #A8D5BB;border-radius:10px;
+  padding:10px 12px;font-size:11px;color:var(--sage-dk);line-height:1.5;margin-bottom:12px
+}
+ 
+.sec-hdr{
+  display:flex;align-items:center;gap:8px;margin:14px 0 8px;
+  font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)
+}
 .sec-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ── MEAL CARD ── */
-.mc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+ 
+/* Meal cards */
+.mc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
 .mc.dessert{border-color:#E8C9BE}
-.mc-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 16px;cursor:pointer;user-select:none}
-.mc-meta{flex:1;min-width:0}
-.mc-type{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.mc-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:13px 15px;cursor:pointer;user-select:none}
+.mc-left{flex:1;min-width:0}
+.mc-type{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .mc-type.d{color:var(--rose)}
-.mc-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;line-height:1.3;font-style:italic}
-.mc-sub{font-size:11px;color:var(--muted);margin-top:4px}
-.mc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.tag{font-size:9px;font-weight:600;padding:2px 8px;border-radius:8px;background:var(--sage-lt);color:var(--sage-dk)}
+.mc-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;font-style:italic;line-height:1.3}
+.mc-info{font-size:10px;color:var(--muted);margin-top:4px;display:flex;flex-wrap:wrap;gap:8px}
+.mc-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.tag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--sage-lt);color:var(--sage-dk)}
 .tag.h{background:var(--plum-lt);color:var(--plum)}
-.chev{width:28px;height:28px;flex-shrink:0;background:var(--faint);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:10px;transition:all .2s}
+.chev{width:26px;height:26px;flex-shrink:0;background:var(--faint);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:8px;transition:all .2s}
 .chev svg{transition:transform .25s}
-.mc.open .chev{background:var(--sage-lt)}
-.mc.open .chev svg{transform:rotate(180deg)}
-
-.mc-body{display:none;border-top:1px solid var(--border)}
-.mc.open .mc-body{display:block}
-
-/* tabs */
+.mc.open .chev{background:var(--sage-lt)}.mc.open .chev svg{transform:rotate(180deg)}
+.mc-body{display:none;border-top:1px solid var(--border)}.mc.open .mc-body{display:block}
 .tabs{display:flex;background:var(--faint)}
-.tab{flex:1;padding:10px 4px;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab{flex:1;padding:9px 4px;font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
 .tab.on{color:var(--sage-dk);border-bottom-color:var(--sage)}
-.panel{display:none;padding:14px 16px 18px}
-.panel.on{display:block}
-
-/* ingredients */
+.panel{display:none;padding:13px 15px 16px}.panel.on{display:block}
 .ings{list-style:none}
-.ing{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--faint);font-size:13px;line-height:1.4}
+.ing{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:1px solid var(--faint);font-size:12px;line-height:1.4}
 .ing:last-child{border:none}
-.ing-ic{width:20px;height:20px;background:var(--sage-lt);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.ing-ic svg{width:9px;height:9px;fill:var(--sage)}
-.ing-q{font-weight:600;font-size:12px;color:var(--sage-dk);min-width:68px;flex-shrink:0}
-.ing-nm{color:var(--txt)}
-
-/* steps */
-.steps{list-style:none}
-.step{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--faint);font-size:13px;line-height:1.55}
+.ing-ic{width:18px;height:18px;background:var(--sage-lt);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ing-ic svg{width:8px;height:8px;fill:var(--sage)}
+.ing-q{font-weight:600;font-size:11px;color:var(--sage-dk);min-width:62px;flex-shrink:0}
+.steps-ol{list-style:none}
+.step{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--faint);font-size:12px;line-height:1.55}
 .step:last-child{border:none}
-.sn{min-width:22px;height:22px;background:var(--sage-dk);color:#fff;border-radius:50%;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-
-/* macros */
-.macros{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
-.mac{background:var(--faint);border-radius:10px;padding:10px 4px;text-align:center}
-.mac-v{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600}
-.mac-l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
-.tip-box{background:var(--amber-lt);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:10px 12px;font-size:12px;color:#6B4E00;line-height:1.55;margin-top:10px}
-.horm-box{background:var(--plum-lt);border-left:3px solid var(--plum);border-radius:0 8px 8px 0;padding:10px 12px;font-size:12px;color:#4A2D6A;line-height:1.55;margin-top:8px}
+.sn{min-width:20px;height:20px;background:var(--sage-dk);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.macros{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px}
+.mac{background:var(--faint);border-radius:8px;padding:8px 3px;text-align:center}
+.mac .mv{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600}
+.mac .ml{font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+.tip-box{background:var(--amber-lt);border-left:3px solid var(--amber);border-radius:0 7px 7px 0;padding:9px 11px;font-size:11px;color:#5a3a00;line-height:1.55;margin-top:8px}
+.horm-box{background:var(--plum-lt);border-left:3px solid var(--plum);border-radius:0 7px 7px 0;padding:9px 11px;font-size:11px;color:#4a2d6a;line-height:1.55;margin-top:6px}
+.adj-note{background:#EDF7F0;border-radius:7px;padding:7px 10px;font-size:10px;color:var(--sage-dk);margin-top:6px;font-weight:500}
 </style>
 </head>
 <body>
-
-<div class="hdr">
-  <div class="hdr-eyebrow">Plan alimentar personalizat</div>
-  <h1>O lună de<br><em>mâncare sănătoasă</em></h1>
-  <div class="hdr-desc">28 de zile · Fără pudră proteică · Desert zilnic · Echilibru hormonal<br>Post vegan: Luni, Miercuri, Vineri · Miere permisă în post</div>
-  <div class="hdr-pills">
-    <span class="hdr-pill">~1000 kcal zile post</span>
-    <span class="hdr-pill">~1450 kcal zile normale</span>
-    <span class="hdr-pill">Rețete din PDF</span>
+ 
+<!-- ═══════════════════════════════════════════════════
+     ONBOARDING
+═══════════════════════════════════════════════════ -->
+<div id="onboarding">
+  <div class="ob-logo">NutriPlan</div>
+  <div class="ob-title">Plan alimentar<br><em>personalizat</em></div>
+  <div class="ob-sub">Calculăm caloriile și rețetele potrivite exact pentru tine, pe o lună întreagă</div>
+ 
+  <div class="ob-card">
+    <div class="ob-progress" id="obProg">
+      <div class="ob-prog-dot on"></div>
+      <div class="ob-prog-dot"></div>
+      <div class="ob-prog-dot"></div>
+      <div class="ob-prog-dot"></div>
+    </div>
+ 
+    <!-- Step 1: Date personale -->
+    <div class="ob-step on" id="obS1">
+      <div class="ob-step-label">Pasul 1 din 4</div>
+      <div class="ob-step-title">Date personale</div>
+      <div class="gender-toggle">
+        <button class="gender-btn on" id="gF" onclick="setGender('F')">Femeie</button>
+        <button class="gender-btn" id="gM" onclick="setGender('M')">Bărbat</button>
+      </div>
+      <div class="ob-row">
+        <div class="ob-field">
+          <label>Vârsta (ani)</label>
+          <input type="number" id="inAge" placeholder="Ex: 35" min="16" max="80">
+        </div>
+        <div class="ob-field">
+          <label>Înălțime (cm)</label>
+          <input type="number" id="inH" placeholder="Ex: 165" min="140" max="220">
+        </div>
+      </div>
+      <div class="ob-row">
+        <div class="ob-field">
+          <label>Greutate actuală (kg)</label>
+          <input type="number" id="inW" placeholder="Ex: 72" min="40" max="200">
+        </div>
+        <div class="ob-field">
+          <label>Greutate dorită (kg)</label>
+          <input type="number" id="inTW" placeholder="Ex: 60" min="40" max="200">
+        </div>
+      </div>
+      <button class="ob-btn" onclick="goStep(2)">Continuă →</button>
+    </div>
+ 
+    <!-- Step 2: Activitate -->
+    <div class="ob-step" id="obS2">
+      <div class="ob-step-label">Pasul 2 din 4</div>
+      <div class="ob-step-title">Nivel de activitate fizică</div>
+      <div class="ob-options">
+        <button class="ob-opt" data-act="1.2" onclick="setOpt(this,'act')">
+          <span class="ob-opt-icon">🪑</span>
+          <div><div>Sedentar</div><div class="ob-opt-sub">Birou, puțin mers pe jos</div></div>
+        </button>
+        <button class="ob-opt" data-act="1.375" onclick="setOpt(this,'act')">
+          <span class="ob-opt-icon">🚶</span>
+          <div><div>Moderat activ</div><div class="ob-opt-sub">Mers zilnic, urc scări</div></div>
+        </button>
+        <button class="ob-opt" data-act="1.55" onclick="setOpt(this,'act')">
+          <span class="ob-opt-icon">🏃</span>
+          <div><div>Activ</div><div class="ob-opt-sub">Sport de 2-3 ori/săptămână</div></div>
+        </button>
+        <button class="ob-opt" data-act="1.725" onclick="setOpt(this,'act')">
+          <span class="ob-opt-icon">🏋️</span>
+          <div><div>Foarte activ</div><div class="ob-opt-sub">Sport zilnic sau muncă fizică</div></div>
+        </button>
+      </div>
+      <button class="ob-btn" onclick="goStep(3)">Continuă →</button>
+      <button class="ob-btn-sec" onclick="goStep(1)">← Înapoi</button>
+    </div>
+ 
+    <!-- Step 3: Obiectiv -->
+    <div class="ob-step" id="obS3">
+      <div class="ob-step-label">Pasul 3 din 4</div>
+      <div class="ob-step-title">Obiectivul tău</div>
+      <div class="ob-options">
+        <button class="ob-opt" data-def="-250" onclick="setOpt(this,'goal')">
+          <span class="ob-opt-icon">🌱</span>
+          <div><div>Slăbire ușoară</div><div class="ob-opt-sub">~0.5 kg/săptămână · deficit 250 kcal</div></div>
+        </button>
+        <button class="ob-opt" data-def="-500" onclick="setOpt(this,'goal')">
+          <span class="ob-opt-icon">⚡</span>
+          <div><div>Slăbire moderată</div><div class="ob-opt-sub">~1 kg/săptămână · deficit 500 kcal</div></div>
+        </button>
+        <button class="ob-opt" data-def="-750" onclick="setOpt(this,'goal')">
+          <span class="ob-opt-icon">🔥</span>
+          <div><div>Slăbire accelerată</div><div class="ob-opt-sub">~1.5 kg/săptămână · deficit 750 kcal</div></div>
+        </button>
+        <button class="ob-opt" data-def="0" onclick="setOpt(this,'goal')">
+          <span class="ob-opt-icon">⚖️</span>
+          <div><div>Menținere</div><div class="ob-opt-sub">Mănânci la calorii de menținere</div></div>
+        </button>
+      </div>
+      <div class="post-info" style="background:rgba(159,225,203,.1);border:1px solid rgba(159,225,203,.2);border-radius:10px;padding:11px 13px;font-size:11px;color:rgba(255,255,255,.7);line-height:1.5;margin-top:4px">
+        <strong style="color:#9FE1CB">Zile de post:</strong> Luni, Miercuri, Vineri — fără carne, ouă, lactate. Mierea este permisă. În zilele de post caloriile sunt reduse cu ~35%.
+      </div>
+      <button class="ob-btn" onclick="goStep(4)">Calculează →</button>
+      <button class="ob-btn-sec" onclick="goStep(2)">← Înapoi</button>
+    </div>
+ 
+    <!-- Step 4: Rezultate -->
+    <div class="ob-step" id="obS4">
+      <div class="ob-step-label">Rezultatele tale</div>
+      <div class="ob-step-title">Planul tău caloric</div>
+      <div class="ob-results" id="obResults"></div>
+      <button class="ob-btn" onclick="startApp()">Deschide planul meu →</button>
+      <button class="ob-btn-sec" onclick="goStep(3)">← Modifică</button>
+    </div>
   </div>
 </div>
-
-<div class="week-tabs" id="wTabs"></div>
-<div id="wViews"></div>
-
+ 
+<!-- ═══════════════════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════════════════ -->
+<div id="app">
+  <div class="app-hdr">
+    <div class="hdr-top">
+      <div>
+        <div class="hdr-greeting">Bun venit,</div>
+        <div class="hdr-name" id="appName">—</div>
+      </div>
+      <button class="hdr-reset" onclick="resetApp()">Schimbă profilul</button>
+    </div>
+    <div class="hdr-stats" id="appStats"></div>
+  </div>
+  <div class="week-wrap" id="wTabs"></div>
+  <div id="wViews"></div>
+</div>
+ 
 <script>
-// ─── RECIPE DATABASE (din ambele PDF-uri, pudra proteica inlocuita) ───────────
-
-const ING_IC = `<svg viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="2"/></svg>`;
-const CHV = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
-
-// POST days: Mon(0), Wed(2), Fri(4) — index within week
-const POST_DAYS = [0,2,4];
-
-// ─── MEGA RECIPE POOL ─────────────────────────────────────────────────────────
-const R = {
-
-// ═══ BREAKFAST NORMAL ════════════════════════════════════════════════════════
-bfN1:{slot:"Dimineață",name:"Smoothie Bowl cu Iaurt Grecesc și Afine",kcal:310,p:24,f:8,c:36,
- tags:["probiotice","antioxidanți"],horm:"Iaurtul grecesc furnizează probiotice care reglează axa intestin-hormoni. Afinele reduc stresul oxidativ.",
- ing:[["300g","iaurt grecesc 2%"],["100g","afine proaspete sau congelate"],["15g","semințe de in măcinate"],["1 ling.","miere"],["20g","fulgi de ovăz"],["10g","nuci tocate"],["½ ling.","scorțișoară"]],
- steps:["Pune iaurtul în bowl și amestecă ușor.","Adaugă afinele, fie întregi, fie ușor pasate.","Presară semințele de in, fulgii de ovăz, nucile și scorțișoara.","Stropește cu miere și servește imediat."],
- tip:"Semințele de in trebuie să fie măcinate — întregi trec nedigerate și nu eliberează lignanii."},
-
-bfN2:{slot:"Dimineață",name:"Pancakes Proteice cu Iaurt, Afine și Miere",kcal:360,p:22,f:12,c:40,
- tags:["glicemie stabilă","beta-glucan"],horm:"Făina de ovăz conține avenantramide cu efect estrogenic blând și fibre beta-glucan care stabilizează glicemia.",
- ing:[["2 buc","ouă întregi"],["50g","iaurt grecesc 2%"],["40g","făină de ovăz (ovăz blendat)"],["½ ling.","praf de copt"],["1 ling.","miere"],["1 ling.","extract de vanilie"],["Un praf","sare"],["60g","afine pentru topping"],["1 ling.","miere pentru topping"]],
- steps:["Amestecă ouăle cu iaurtul, mierea și vanilia.","Adaugă treptat făina de ovăz, praful de copt și sarea. Nu bate excesiv.","Coace în tigaie antiaderentă uscată la foc mic, 2-3 minute per parte. Întoarce când apar bule la suprafață.","Servește cu afine și miere deasupra."],
- tip:"Pancakes perfecte = foc mic și răbdare. La foc mare, se ard pe exterior și rămân crude înăuntru."},
-
-bfN3:{slot:"Dimineață",name:"Omletă Pufoasă cu Legume și Feta",kcal:340,p:26,f:18,c:20,
- tags:["precursori hormonali","colină"],horm:"Ouăle conțin colesterol bun și colină — material de bază pentru toți hormonii steroizi.",
- ing:[["3 buc","ouă"],["30g","feta sau brânza de capră"],["50g","spanac proaspăt"],["4-5 buc","roșii cherry, înjumătățite"],["1 ling.","ulei de măsline"],["Sare","piper, oregano uscat"],["1 felie","pâine integrală, prăjită"]],
- steps:["Bate ouăle cu sare, piper și oregano.","Încălzește uleiul în tigaie, sotează spanacul și roșiile 1 minut.","Toarnă ouăle. La foc mic, gătește 2-3 minute fără să amesteci.","Presară feta sfărâmată, îndoaie omleta. Servește cu pâine prăjită."],
- tip:"Secretul omletei pufoase: foc mic și răbdare. Dacă amesteci, iese scrambled eggs."},
-
-bfN4:{slot:"Dimineață",name:"French Toast cu Banană Caramelizată",kcal:360,p:18,f:12,c:46,
- tags:["serotonină","triptofan natural"],horm:"Banana + miere furnizează triptofan și glucoză în combinația optimă pentru producerea serotoninei.",
- ing:[["2 felii","pâine integrală groasă (80g)"],["2 buc","ouă"],["50ml","lapte 1.5%"],["1 ling.","miere"],["1 ling.","extract de vanilie"],["½ ling.","scorțișoară"],["1 buc","banană coaptă, feliată"],["5g","unt sau ulei de cocos"],["1 ling.","miere extra pentru servire"]],
- steps:["Bate ouăle cu laptele, mierea, vanilia și scorțișoara.","Înmoaie feliile de pâine 30 secunde pe fiecare parte.","Gătește în tigaie cu unt la foc mediu, 2-3 minute per parte, până devin aurii.","Caramelizează banana în aceeași tigaie cu 1 ling. miere, 1-2 minute. Servește deasupra."],
- tip:""},
-
-bfN5:{slot:"Dimineață",name:"Clătite Proteice cu Banană",kcal:320,p:20,f:10,c:38,
- tags:["energie"],horm:"",
- ing:[["150g","albușuri (4-5 buc sau cutie albușuri)"],["1 buc","banană coaptă (120g)"],["30g","fulgi de ovăz"],["½ ling.","praf de copt"],["1 ling.","scorțișoară"],["1 ling.","vanilie"],["1 ling.","miere pentru servire"]],
- steps:["Pasează banana bine.","Amestecă albușurile cu banana, ovăzul, praful de copt, scorțișoara și vanilia.","Gătește clătite mici în tigaie antiaderentă uscată la foc mic, 2 minute per parte.","Servește cu miere sau fructe proaspete."],
- tip:"Cu cât banana e mai coaptă (pete maro), cu atât clătitele sunt mai dulci natural."},
-
-bfN6:{slot:"Dimineață",name:"Avocado Toast cu Ou Poșat și Semințe",kcal:290,p:16,f:18,c:18,
- tags:["grăsimi esențiale","precursori hormonali"],horm:"Avocado furnizează acizi grași esențiali pentru producerea hormonilor steroizi.",
- ing:[["1 felie","pâine integrală groasă, prăjită"],["70g","avocado"],["1 buc","ou proaspăt"],["1 ling.","oțet alb"],["Sare","piper, fulgi de chili, zeamă lămâie"],["5g","semințe de dovleac sau susan"],["Câteva frunze","rucola"]],
- steps:["Fierbe apă cu oțetul. Creează un vârtej și alunecă oul în centru. Fierbe 3 minute.","Prăjește pâinea.","Zdrobește avocado cu sare, piper, zeama de lămâie și chili.","Asamblează: pâine → avocado → rucola → ou poșat → semințe → sare de mare."],
- tip:"Trucul oului poșat perfect: oul trebuie să fie foarte proaspăt — albușul se coagulează strâns."},
-
-bfN7:{slot:"Dimineață",name:"Sandviș Cald cu Ou, Cașcaval și Avocado",kcal:270,p:15,f:18,c:17,
- tags:["proteine","satiație"],horm:"",
- ing:[["2 felii","pâine integrală (35g)"],["2 buc","ouă întregi"],["20g","cașcaval light"],["20g","avocado felii"],["Sare","piper, boia"],["1 ling.","ulei de măsline"],["Frunze","spanac sau rucola (opțional)"]],
- steps:["Gătește ouăle bătute în tigaie cu puțin ulei, ca omletă.","Rumenește ușor feliile de pâine.","Asamblează: pâine + ouă + cașcaval + avocado + verdețuri.","Reîncălzește sandwich-ul 1 min în tigaie să se topească brânza."],
- tip:"Înlocuiește avocado cu 1 linguriță de pesto pentru un gust mediteranean."},
-
-bfN8:{slot:"Dimineață",name:"Terci de Ovăz Tiramisu Sănătos",kcal:380,p:16,f:10,c:52,
- tags:["energie susținută","antioxidanți cafea"],horm:"Cafeaua conține antioxidanți care protejează glandele suprarenale.",
- ing:[["45g","fulgi de ovăz"],["150ml","lapte 1.5%"],["1 shot","espresso (40ml), răcit"],["1 praf","sare"],["Îndulcitor","lichid după gust"],["50g","iaurt grecesc 2%"],["10g","cacao pudră"],["1 ling.","miere"]],
- steps:["Amestecă ovăzul cu laptele și sarea. Pune la frigider peste noapte SAU gătește la foc mediu 5-7 minute.","Dimineața, toarnă espresso-ul rece deasupra.","Amestecă iaurtul cu mierea și pune ca strat de cremă.","Presară cacao generos deasupra cu o sită fină."],
- tip:"Varianta overnight e gata în 2 minute dimineața — pregătește seara."},
-
-// ═══ BREAKFAST POST ═══════════════════════════════════════════════════════════
-bfP1:{slot:"Dimineață",name:"Budincă de Chia cu Mango și Lapte de Cocos",kcal:320,p:9,f:16,c:38,veg:true,
- tags:["fitoestrogeni","energie stabilă"],horm:"Semințele de chia conțin lignani — fitoestrogeni care ajută la echilibrarea estrogenului.",
- ing:[["50g","semințe de chia"],["200ml","lapte de cocos light"],["100g","mango congelat"],["10g","semințe de in măcinate"],["1 ling.","miere"],["½ ling.","scorțișoară"],["1 ling.","extract de vanilie"]],
- steps:["Amestecă chia cu laptele de cocos, semințele de in și vanilia. Amestecă 1 minut.","Lasă 5 minute, amestecă din nou (altfel chia se adună la fund).","Pune la frigider minim 30 minute sau peste noapte.","Adaugă mango tăiat cuburi, stropește cu miere și scorțișoară."],
- tip:"Pregătește seara — dimineața ai micul dejun gata în 2 minute."},
-
-bfP2:{slot:"Dimineață",name:"Ovăz Cald cu Mere Caramelizate și Scorțișoară",kcal:320,p:8,f:8,c:56,veg:true,
- tags:["reglare glicemie","anti-inflamator"],horm:"Ovăzul conține beta-glucan care reglează glicemia și reduce cortisolul.",
- ing:[["60g","fulgi de ovăz"],["250ml","lapte de ovăz sau migdale"],["1 buc","măr (150g), tăiat cuburi"],["1 ling.","ulei de cocos"],["1 ling.","miere"],["1 ling.","scorțișoară"],["Un praf","nucșoară"],["10g","nuci tocate"]],
- steps:["Călește cuburile de măr în uleiul de cocos 2-3 minute cu ½ ling. scorțișoară — devin caramelizate.","Fierbe ovăzul cu laptele vegetal la foc mediu 5-7 minute, amestecând.","Transferă ovăzul în bol, pune merele caramelizate deasupra.","Stropește cu miere și presară nucșoară și nucile tocate."],
- tip:"Ovăzul gătit cu lapte vegetal (nu apă) are textură mult mai cremoasă."},
-
-bfP3:{slot:"Dimineață",name:"Budincă de Chia cu Căpșuni și Lapte de Ovăz",kcal:310,p:9,f:13,c:42,veg:true,
- tags:["fibre","antioxidanți"],horm:"",
- ing:[["50g","semințe de chia"],["240ml","lapte de ovăz"],["150g","căpșuni proaspete sau congelate"],["1 ling.","miere"],["1 ling.","extract de vanilie"]],
- steps:["Amestecă chia cu laptele de ovăz și vanilia. Lasă 2-3 min, amestecă din nou.","Pune la frigider minimum 30 minute sau peste noapte.","Pasează căpșunile sau taie-le felii. Amestecă cu mierea.","Pune căpșunile deasupra sau amestecate înăuntru."],
- tip:""},
-
-bfP4:{slot:"Dimineață",name:"Smoothie Verde cu Spanac, Banană și Ghimbir",kcal:280,p:6,f:8,c:44,veg:true,
- tags:["detox estrogen","energie susținută"],horm:"Spanacul conține indol-3-carbinol care ajută ficatul să metabolizeze corect estrogenul.",
- ing:[["2 pumni","spanac proaspăt (60g)"],["1 buc","banană coaptă (120g)"],["200ml","lapte de migdale neîndulcit"],["10g","semințe de in măcinate"],["1 ling.","miere"],["½ ling.","ghimbir proaspăt ras"]],
- steps:["Pune spanacul cu laptele în blender. Mixează 30 secunde.","Adaugă banana, semințele de in, mierea și ghimbirul.","Mixează 45-60 secunde până e complet omogen.","Servește imediat — verdele se oxidează rapid."],
- tip:"Dacă blenderul nu e puternic, adaugă spanacul ultimul."},
-
-bfP5:{slot:"Dimineață",name:"Chia Tropical cu Lapte de Cocos și Mango",kcal:281,p:7,f:10,c:40,veg:true,
- tags:["MCT","energie stabilă"],horm:"Laptele de cocos conține MCT (acizi grași cu lanț mediu) care furnizează energie fără să perturbe insulina.",
- ing:[["40g","semințe de chia"],["100ml","lapte de cocos"],["100g","mango proaspăt sau congelat"],["½ ling.","scorțișoară"],["1 ling.","miere"]],
- steps:["Amestecă chia cu laptele de cocos.","Lasă la frigider minimum 30 minute sau peste noapte.","Adaugă mango tăiat cuburi și scorțișoara.","Stropește cu miere la servire."],
- tip:""},
-
-bfP6:{slot:"Dimineață",name:"Budincă de Ovăz cu Afine și Nuci",kcal:380,p:10,f:14,c:52,veg:true,
- tags:["omega-3 ALA","antioxidanți"],horm:"Nucile conțin omega-3 ALA și fitosteroli care susțin echilibrul hormonal.",
- ing:[["50g","fulgi de ovăz"],["150ml","lapte de ovăz"],["60g","afine proaspete sau congelate"],["10g","nuci tocate grosier"],["1 ling.","miere"],["½ ling.","scorțișoară"]],
- steps:["Pune ovăzul cu laptele la foc mediu, amestecând, 5-7 minute.","Adaugă ½ din afine în ultimul minut de gătire.","Toarnă în bol, adaugă afinele rămase și nucile.","Stropește cu miere și scorțișoară."],
- tip:""},
-
-// ═══ LUNCH NORMAL ═════════════════════════════════════════════════════════════
-luN1:{slot:"Prânz",name:"Orez Fajita cu Pui și Mozzarella Light",kcal:484,p:31,f:17,c:47,
- tags:["proteine complete","satiație"],horm:"",
- ing:[["250g","piept de pui, fâșii"],["100g","orez basmati (crud)"],["1 buc","ardei roșu + 1 galben, fâșii"],["1 buc","ceapă roșie feliată"],["1 cățel","usturoi zdrobit"],["1 ling.","ulei de măsline"],["1 ling.","boia dulce, ½ chimion, ½ paprika afumată"],["Zeamă","de la ½ lămâie, sare, piper"],["40g","mozzarella light rasă"],["Coriandru","proaspăt"]],
- steps:["Fierbe orezul 15-18 minute. Scurge.","Marinează puiul 10 min cu condimentele și lămâia. Rumenește în ulei 5-6 minute.","Sotează ceapa, ardeii și dovlecelul 4-5 minute în aceeași tigaie.","Adaugă puiul și orezul, amestecă 2-3 minute. Presară mozzarella, acoperă 1 minut.","Servește cu coriandru."],
- tip:"Servește cu 1-2 linguri de iaurt grecesc 2% alături — adaugă cremozitate și proteine extra."},
-
-luN2:{slot:"Prânz",name:"Pui cu Unt și Usturoi cu Piure Cremos",kcal:480,p:38,f:14,c:46,
- tags:["satiație","reglare cortisol"],horm:"Cartofii fierți cu coajă au indice glicemic mai mic și conțin potasiu care reglează cortisolul.",
- ing:[["150g","piept de pui, cuburi"],["15g","unt"],["2 căței","usturoi fin tocați"],["1 ling.","ulei de măsline"],["Sare","piper, boia, pătrunjel uscat"],["150g","cartofi fierți cu coajă"],["100ml","lapte cald 1.5%"],["50g","cremă brânză light"]],
- steps:["Gătește puiul în ulei de măsline 6-8 minute la foc mediu-mare până devine auriu.","Reduce la minim. Adaugă untul, usturoiul și pătrunjelul. Amestecă 1 minut. Scoate de pe foc.","Zdrobește cartofii fierți cu laptele cald și crema de brânză.","Servește puiul cu sosul de unt-usturoi deasupra piureului."],
- tip:"Secretul piureului cremos: laptele trebuie să fie fierbinte când îl adaugi."},
-
-luN3:{slot:"Prânz",name:"McChicken Homemade Sănătos",kcal:399,p:31,f:15,c:33,
- tags:["proteine"],horm:"",
- ing:[["260g","piept de pui tocat"],["Condimente","sare, piper, boia iute, usturoi pudră, ceapă pudră"],["30g","fulgi de porumb mărunțiți + condimente"],["40g","iaurt grecesc 2%"],["5g","muștar"],["½ ling.","usturoi pudră"],["Asamblare","2 chifle, salată, castraveți murați"]],
- steps:["Condimentează carnea, formează 2 chiftele plate. Lasă 15 min la congelator.","Tăvălește prin fulgii de porumb condimentați, apăsând să adere.","Coace 15 min la 190°C sau 12 min air fryer 200°C.","Amestecă sosul (iaurt + muștar + usturoi pudră).","Asamblează: chiflă → sos → salată → chiftea → murături → capac."],
- tip:"Fulgii de porumb zdrobiți grosier dau textură extra crocantă."},
-
-luN4:{slot:"Prânz",name:"Somon la Tigaie cu Salată de Avocado",kcal:390,p:34,f:24,c:8,
- tags:["omega-3 DHA+EPA","anti-inflamator puternic"],horm:"Somonul — cea mai bogată sursă de omega-3 DHA și EPA, esențiali pentru producerea prostaglandinelor care reglează ciclul hormonal.",
- ing:[["150g","file de somon"],["1 ling.","ulei de măsline"],["1 cățel","usturoi zdrobit"],["Sare","piper, boia afumată, cimbru"],["80g","avocado, cuburi"],["½ buc","castravete, cuburi"],["Zeamă","de la 1 lămâie"],["Frunze","rucola sau salată"]],
- steps:["Pat uscat somonul cu prosop de hârtie (esențial pentru crustă).","Condimentează cu sare, piper și boia.","Încinge uleiul la foc mare. Pune somonul cu pielea în jos, 4 minute fără să miști.","Întoarce și gătește 2-3 minute. Adaugă usturoiul și cimbru.","Amestecă avocado cu castravetele, zeama de lămâie, sare. Servește cu rucola."],
- tip:"Somonul gata: se desprinde ușor cu spatula. Dacă rezistă, mai are nevoie de 1 minut."},
-
-luN5:{slot:"Prânz",name:"Lasagna Sănătoasă cu Carne și Cottage",kcal:480,p:61,f:15,c:38,
- tags:["calciu","proteine"],horm:"",
- ing:[["120g","carne tocată vită slabă"],["Ceapă","morcov, țelină tocate"],["6 căței","usturoi"],["10g","pastă roșii + 90g roșii cuburi (conservă)"],["Condimente","italiene, sare, piper"],["100g","cottage cheese light + 10g parmezan"],["4 foi","lasagna + 20g cașcaval light"]],
- steps:["Călește ceapa, morcovul, țelina 5 min. Adaugă usturoi + carne. Rumenește.","Adaugă pasta roșii, roșiile, condimentele. Fierbe 15-20 min.","Amestecă cottage cu parmezanul.","Montează: sos → foi → cremă brânza. Repetă. La final cașcaval.","Coace acoperit 25 min la 180°C, apoi 10-15 min fără folie."],
- tip:"Lasagna e mai bună a doua zi — fă o tavă întreagă!"},
-
-luN6:{slot:"Prânz",name:"Wrap cu Pui și Avocado",kcal:309,p:28,f:14,c:22,
- tags:["grăsimi sănătoase","proteine"],horm:"",
- ing:[["120g","piept de pui gătit, feliat"],["1 buc","lipie integrală (60g)"],["40g","avocado zdrobit"],["50g","mix salată"],["50g","roșii cherry"],["1 ling.","iaurt grecesc ca sos"],["Sare","piper, zeamă lămâie"]],
- steps:["Încălzește lipia 1 minut în tigaie.","Amestecă avocado cu sare, piper și zeamă de lămâie.","Întinde avocado pe lipie, adaugă salata, roșiile și puiul.","Adaugă o lingură de iaurt grecesc. Rulează strâns."],
- tip:""},
-
-luN7:{slot:"Prânz",name:"Sarmale Proteice în Foi de Varză Acră",kcal:300,p:32,f:10,c:24,
- tags:["probiotice naturale","detox estrogen"],horm:"Varza acră fermentată conține probiotice naturale și indoli care detoxifică estrogenul în exces.",
- ing:[["130g","carne tocată curcan sau vită slabă"],["40g","orez fiert"],["50g","ceapă călită"],["Condimente","cimbru, piper, boia, foi de dafin"],["3-4 foi","varză murată"],["100ml","suc de roșii"]],
- steps:["Amestecă carnea cu orezul, ceapa și condimentele.","Taie nervurile groase. Pune 1-2 ling. umplutură și rulează strâns.","Așază în cratiță. Acoperă cu apă + suc roșii + foi de dafin.","Fierbe la foc mic 90-120 min sau cuptor 150°C 2 ore."],
- tip:"Varza murată = probiotice naturale. Nu o clăti prea mult — sucul e bogat în bacterii benefice."},
-
-luN8:{slot:"Prânz",name:"Mac & Cheese cu Pui Crocant Honey Buffalo",kcal:492,p:36,f:16,c:47,
- tags:["proteine","satiație"],horm:"",
- ing:[["100g","piept pui cuburi"],["20g","fulgi porumb + 1 ou + condimente"],["50g","paste integrale"],["80g","cottage cheese degresat"],["30ml","lapte"],["1 ling.","miere + 1 ling. sos iute (glazură)"],["Ceapă verde","pentru decor"]],
- steps:["Trece puiul prin ou bătut, apoi prin fulgii de porumb condimentați. Air fryer 200°C 12 min.","Fierbe pastele.","Amestecă cottage cheese + lapte la foc mic 3-4 minute, amestecând, până se leagă.","Glazurează puiul cu miere + sos iute.","Servește puiul pe mac&cheese. Presară ceapă verde."],
- tip:""},
-
-// ═══ LUNCH POST ═══════════════════════════════════════════════════════════════
-luP1:{slot:"Prânz",name:"Bol cu Năut, Ardei Copt și Tahini cu Turmeric",kcal:390,p:16,f:14,c:48,veg:true,
- tags:["anti-inflamator","detox hepatic"],horm:"Turmericul (curcumina) reduce inflamația sistemică care perturbă echilibrul hormonal. Adaugă un praf de piper negru pentru absorbție 2000x mai bună.",
- ing:[["200g","năut fiert (conservă, clătit)"],["1 buc","ardei roșu copt și curățat"],["2 ling.","tahini"],["1 ling.","ulei de măsline"],["½ ling.","turmeric pudră"],["Zeamă","de la 1 lămâie"],["1 cățel","usturoi zdrobit"],["Sare","piper, pătrunjel"]],
- steps:["Coace ardeiul la 200°C 20 min sau direct pe flacără. Curăță coaja, taie fâșii.","Pregătește dressingul: tahini + ulei + turmeric + lămâie + usturoi + sare. Diluează cu apă.","Pune năutul în bol, adaugă ardeiul copt, toarnă dressingul.","Finalizează cu pătrunjel proaspăt."],
- tip:"Adaugă întotdeauna un praf de piper negru lângă turmeric."},
-
-luP2:{slot:"Prânz",name:"Wrap cu Tofu Afumat, Avocado și Legume",kcal:440,p:19,f:19,c:36,veg:true,
- tags:["proteine vegetale","grăsimi sănătoase"],horm:"",
- ing:[["100g","tofu afumat, fâșii"],["60g","lipie integrală"],["40g","avocado"],["50g","mix salată verde"],["50g","castraveți proaspeți"],["1 ling.","tahini"],["Zeamă","de la ½ lămâie"],["5ml","ulei de măsline, sare, piper"]],
- steps:["Rumenește tofu 3-4 minute per parte în tigaie antiaderentă.","Amestecă tahini cu zeama de lămâie și 2 ling. apă până e cremos.","Încălzește lipia 1 minut.","Întinde tahini pe lipie, adaugă avocado zdrobit, salata, castravetele, tofu. Rulează."],
- tip:""},
-
-luP3:{slot:"Prânz",name:"Fasole Bătută cu Usturoi și Ulei de Măsline",kcal:320,p:14,f:9,c:44,veg:true,
- tags:["fitoestrogeni blânzi","fibre solubile"],horm:"Fasolea albă conține fitoestrogeni blânzi și fibre solubile care reglează metabolismul hormonal.",
- ing:[["200g","fasole albă fiartă sau conservă"],["3 căței","usturoi"],["2 ling.","ulei de măsline extra virgin"],["Zeamă","de la ½ lămâie"],["Sare","piper, cimbru uscat"],["2 felii","pâine integrală prăjită"],["Boia afumată","pentru decor"]],
- steps:["Pasează fasolea cu usturoiul, sarea, zeama de lămâie și 1 ling. ulei.","Adaugă apă caldă lingură cu lingură dacă vrei textură mai fluidă.","Prăjește pâinea. Întinde generos pasta de fasole.","Stropește cu a doua lingură de ulei, presară boia."],
- tip:"Fasole din conservă e la fel de bună ca cea fiartă. Clătește bine sub jet de apă rece."},
-
-luP4:{slot:"Prânz",name:"Supă Cremă de Linte Roșie cu Ghimbir și Cocos",kcal:310,p:14,f:9,c:44,veg:true,
- tags:["echilibru hormonal","bogat în fier"],horm:"Lintea roșie conține fier + folat, esențiale pentru sinteza dopaminei. Ghimbirul reduce inflamația hormonală.",
- ing:[["100g","linte roșie uscată"],["200ml","lapte de cocos light"],["1 buc","ceapă tocată"],["2 căței","usturoi"],["1 ling.","ghimbir proaspăt ras"],["½ ling.","turmeric, ½ chimion"],["1 ling.","ulei de cocos"],["Sare","piper"]],
- steps:["Călește ceapa în ulei 3-4 min. Adaugă usturoi, ghimbir, turmeric, chimion. Amestecă 1 min.","Adaugă lintea clătită și 400ml apă. Fierbe 20-25 min.","Adaugă laptele de cocos. Mixează cu blenderul de mână.","Ajustează condimentele. Servește cu fir de ulei de măsline."],
- tip:"Supa se păstrează 3 zile la frigider și îngheață excelent."},
-
-luP5:{slot:"Prânz",name:"Salată Caldă de Linte cu Spanac și Lămâie",kcal:320,p:16,f:9,c:42,veg:true,
- tags:["fier non-hem","echilibru neurotransmițători"],horm:"Spanacul conține folat esențial pentru sinteza serotoninei și dopaminei.",
- ing:[["150g","linte verde fiartă sau conservă"],["80g","spanac proaspăt"],["100g","roșii cherry, înjumătățite"],["30g","ceapă roșie feliată subțire"],["1 ling.","ulei de măsline"],["Zeamă","de la 1 lămâie"],["1 ling.","miere"],["Sare","piper, coriandru măcinat"]],
- steps:["Pregătește dressingul: ulei + lămâie + miere + sare + piper.","Încălzește lintea scursă în tigaie 2-3 min. Adaugă spanacul, amestecă 30 secunde.","Ia de pe foc. Adaugă roșiile și ceapa roșie.","Toarnă dressingul, amestecă ușor."],
- tip:""},
-
-luP6:{slot:"Prânz",name:"Bol cu Halloumi și Năut cu Dressing Balsamic",kcal:351,p:17,f:15,c:36,veg:true,
- tags:["calciu","proteine vegetale"],horm:"",
- ing:[["60g","halloumi light"],["80g","năut fiert"],["50g","morcov"],["50g","ardei gras"],["50g","salată verde"],["5ml","ulei de măsline"],["10ml","oțet balsamic"],["5g","miere"]],
- steps:["Prăjește halloumi în tigaie fără ulei, 2-3 min pe fiecare parte.","Taie legumele și amestecă-le cu năutul.","Pregătește dressingul: oțet + ulei + miere.","Adaugă halloumi peste salată și toarnă dressingul."],
- tip:"Adaugă semințe de dovleac pentru un plus de crocant și grăsimi sănătoase."},
-
-luP7:{slot:"Prânz",name:"Supă de Roșii cu Busuioc și Năut Crocant",kcal:250,p:12,f:7,c:34,veg:true,
- tags:["licopen","protecție hormonală"],horm:"Roșiile conțin licopen — antioxidant care protejează receptorii hormonali.",
- ing:[["400g","roșii sau conservă roșii"],["100g","năut fiert"],["1 buc","ceapă tocată"],["3 căței","usturoi"],["200ml","apă"],["1 ling.","ulei de măsline"],["Un mănunchi","busuioc proaspăt"],["Sare","piper"]],
- steps:["Coace năutul cu ulei + sare + boia la 200°C 25-30 min, până devine crocant.","Călește ceapa 4-5 min, adaugă usturoiul 1 min.","Adaugă roșiile și apa. Fierbe 20 min. Mixează cu blenderul.","Ajustează condimentele. Adaugă busuioc. Servește cu năut crocant deasupra."],
- tip:"Năutul crocant face supa din simplă în spectaculoasă — nu sări peste acest pas."},
-
-luP8:{slot:"Prânz",name:"Salată cu Năut, Ardei și Oțet Balsamic",kcal:290,p:12,f:10,c:38,veg:true,
- tags:["fibre","antioxidanți"],horm:"",
- ing:[["200g","năut fiert"],["1 buc","ardei gras roșu, cuburi"],["50g","rucola sau salată"],["50g","morcov ras"],["1 ling.","ulei de măsline"],["1 ling.","oțet balsamic"],["Sare","piper, busuioc uscat"]],
- steps:["Pune rucola și legumele în bol.","Adaugă năutul clătit și scurs.","Prepară dressingul: ulei + oțet balsamic + sare + piper + busuioc.","Toarnă dressingul, amestecă ușor."],
- tip:""},
-
-luP9:{slot:"Prânz",name:"Rulouri de Dovlecel cu Cremă de Nuci",kcal:175,p:4,f:16,c:6,veg:true,
- tags:["grăsimi sănătoase","omega-3 ALA"],horm:"Nucile conțin omega-3 ALA și fitosteroli care susțin producția hormonală.",
- ing:[["1 buc","dovlecel mare, feliat subțire pe lungime"],["50g","nuci hidratate 30 min"],["1 cățel","usturoi"],["Zeamă","de lămâie, sare, piper"]],
- steps:["Feliază dovlecelul subțire pe lungime.","Gătește pe grill 1-2 min per parte.","Mixează nucile hidratate cu usturoi, lămâie, sare, piper până e cremă fină.","Lasă crema 5-10 min la frigider. Pune câte o linguriță la capătul fiecărei felii și rulează."],
- tip:""},
-
-// ═══ DINNER NORMAL ════════════════════════════════════════════════════════════
-dnN1:{slot:"Seară",name:"Pulpe de Pui Miere BBQ cu Cartofi Crocanți",kcal:390,p:40,f:8,c:38,
- tags:["proteine","potasiu"],horm:"",
- ing:[["200g","pulpe pui dezosate, fără piele"],["80g","sos BBQ fără zahăr"],["1 ling.","miere"],["Condimente","sare, piper, boia, usturoi pudră"],["200g","cartofi cuburi"],["Condimente cartofi","sare, paprika, usturoi granulat"]],
- steps:["Amestecă sosul BBQ cu mierea și condimentele. Marinează puiul 10 min.","Coace puiul la 200°C 22-25 min.","Amestecă cartofii cu condimentele și spray ulei.","Air fryer 180°C 25-30 min sau cuptor 200°C 30 min."],
- tip:"Cartofi extra crocanți: lasă-i 2-3 minute la aer înainte de servire."},
-
-dnN2:{slot:"Seară",name:"Tocăniță de Pui cu Mazăre și Morcov",kcal:310,p:33,f:8,c:24,
- tags:["satiație","fibre"],horm:"",
- ing:[["150g","piept pui cuburi"],["100g","mazăre fiartă"],["70g","morcov rondele"],["40g","ceapă + 2 căței usturoi"],["150ml","suc de roșii"],["1 ling.","ulei de măsline"],["Sare","piper, cimbru, boia afumată, pătrunjel"]],
- steps:["Călești ceapa și morcovul în ulei + 2 ling. apă, 5 minute.","Adaugă usturoiul și puiul. Rumenești ușor 3-4 minute.","Toarnă sucul de roșii, adaugă mazărea și condimentele.","Fierbi la foc mic 15-20 minute. Presari pătrunjel la final."],
- tip:""},
-
-dnN3:{slot:"Seară",name:"Omletă Proteică cu Cașcaval, Legume și Toast",kcal:300,p:26,f:17,c:13,
- tags:["proteine","vitamina D"],horm:"",
- ing:[["2 buc","ouă întregi"],["18g","cașcaval light ras"],["1 felie","șuncă curcan (40g)"],["36g","ciuperci feliate"],["36g","roșii cherry sau ardei"],["1 felie","pâine integrală"],["1 ling.","ulei de măsline, sare, piper, oregano"]],
- steps:["Călește legumele în ulei 2-3 minute.","Bate ouăle cu condimentele. Toarnă peste legume.","Adaugă șunca. Gătește la foc mic 2-3 minute.","Adaugă cașcavalul în ultimele 30 secunde. Servește cu pâine prăjită."],
- tip:""},
-
-dnN4:{slot:"Seară",name:"Wrap cu Pui Cremos, Brânză și Usturoi",kcal:437,p:34,f:18,c:34,
- tags:["proteine","calciu"],horm:"",
- ing:[["120g","piept pui gătit, fâșii"],["1 buc","lipie integrală"],["30g","cremă brânza light"],["1 cățel","usturoi tocat fin"],["50g","mix legume (ardei, roșii, castraveți)"],["Sare","piper, paprika"],["Frunze","salată"]],
- steps:["Amestecă crema de brânza cu usturoiul, sarea și paprika.","Încălzește lipia. Întinde crema.","Adaugă puiul, legumele și salata.","Rulează strâns și servește imediat."],
- tip:""},
-
-dnN5:{slot:"Seară",name:"Ruladă de Dovlecei cu 3 Ingrediente",kcal:330,p:28,f:18,c:12,
- tags:["proteine","legume"],horm:"",
- ing:[["3-4 buc","dovlecei mari (~500g curățați)"],["3 buc","ouă"],["120g","cașcaval light ras"],["Sare","piper"],["100g","mozzarella light (umplutură)"],["150g","șuncă slabă (umplutură)"]],
- steps:["Rade dovleceii. Stoarce apa în exces.","Amestecă cu ouăle, cașcavalul și condimentele.","Toarnă pe tavă cu hârtie de copt. Coace 180°C 25 min.","Adaugă umplutura pe blat cald. Rulează. Mai coace 10 minute."],
- tip:"Se păstrează bine 2 zile la frigider."},
-
-dnN6:{slot:"Seară",name:"Fasole Bătută cu Mușchi Afumat",kcal:340,p:24,f:18,c:22,
- tags:["fibre","fier"],horm:"",
- ing:[["110g","fasole fiartă sau conservă"],["1 cățel","usturoi + sare"],["1 ling.","ulei de măsline"],["90g","mușchi afumat slab"],["30g","ceapă călită"],["1 ling.","sos roșu light (opțional)"]],
- steps:["Pasează fasolea cu usturoi, sare și 1 ling. ulei. Adaugă apă caldă pentru textură fină.","Rumenește mușchiul ușor în tigaie antiaderentă.","Călește ceapa și pune peste.","Servește totul cald cu pătrunjel și boia dulce."],
- tip:"Adaugă 1-2 linguri apă caldă la pasare — face crema mai fină."},
-
-dnN7:{slot:"Seară",name:"Sandviș Proteic cu Șuncă Slabă și Legume",kcal:302,p:22,f:8,c:36,
- tags:["rapid","proteine"],horm:"",
- ing:[["2 felii","pâine integrală (70-80g)"],["100g","șuncă slabă curcan"],["1 ling.","cremă brânza light"],["Frunze","salată"],["Roșii și castravete","după gust"],["1 ling.","muștar"]],
- steps:["Așază feliile de pâine.","Adaugă șunca slabă peste o felie.","Completează cu brânza, legumele și muștarul.","Acoperă și servește imediat."],
- tip:"Pentru gust mai fresh, înlocuiește crema de brânza cu iaurt grecesc amestecat cu muștar."},
-
-// ═══ DINNER POST ═════════════════════════════════════════════════════════════
-dnP1:{slot:"Seară",name:"Salată de Vinete cu Tahini pe Lipie Integrală",kcal:290,p:8,f:16,c:28,veg:true,
- tags:["grăsimi sănătoase","anti-oxidant"],horm:"",
- ing:[["2 buc","vinete medii (~400g)"],["2 ling.","tahini"],["1 cățel","usturoi zdrobit"],["Zeamă","de la 1 lămâie"],["Sare","după gust"],["1 buc","lipie integrală"],["Pătrunjel","pentru decor"]],
- steps:["Coace vinetele direct pe flacăra aragazului sau la 220°C, 20-25 min.","Lasă să se răcească 10 min, curăță coaja. Lasă la scurs 20 minute.","Toacă mărunt cu cuțit din lemn sau plastic.","Amestecă cu tahini, usturoi, lămâie, sare. Servește pe lipie încălzită."],
- tip:"Scurgerea vinetelor e esențială — cu cât le lași mai mult, cu atât salata e mai cremoasă."},
-
-dnP2:{slot:"Seară",name:"Budincă de Chia cu Cacao și Banană",kcal:320,p:10,f:14,c:44,veg:true,
- tags:["magneziu","energie"],horm:"Cacaoa conține magneziu, esențial pentru producerea progesteronului.",
- ing:[["45g","semințe de chia"],["200ml","lapte de ovăz"],["1 buc","banană coaptă (100g)"],["10g","cacao pudră"],["20g","curmale"],["1 ling.","miere"],["Esență","vanilie"]],
- steps:["Amestecă chia cu laptele, vanilia. Lasă 2-3 min, amestecă din nou.","Pune la frigider minim 30 min sau peste noapte.","Pasează banana cu curmalele și cacaoa.","Amestecă cu budinca sau pune deasupra."],
- tip:"Curmalele dau dulceața naturală — poți reduce sau elimina mierea."},
-
-dnP3:{slot:"Seară",name:"Hummus Clasic cu Morcovi Crocanți",kcal:240,p:10,f:10,c:28,veg:true,
- tags:["fibre","proteine vegetale"],horm:"",
- ing:[["200g","năut fiert"],["2 ling.","tahini"],["2 căței","usturoi"],["Zeamă","de la 1 lămâie"],["3 ling.","ulei de măsline"],["Sare","boia dulce, chimion, apă rece"],["2-3 buc","morcovi tăiați bastonașe"]],
- steps:["Mixează năutul cu tahinul, usturoiul, zeama de lămâie și sare în blender 2-3 minute.","Adaugă treptat apă rece (4-6 ling.) și 2 ling. ulei. Continuă să mixezi până devine cremos.","Transferă în bol, stropește cu ulei, presară boia și chimion.","Servește cu morcovii crocanți."],
- tip:"Secretul hummus-ului cremos: adaugă apă rece (nu caldă) și mixează mult."},
-
-dnP4:{slot:"Seară",name:"Guacamole Rapid cu Legume Crocante",kcal:180,p:3,f:14,c:12,veg:true,
- tags:["grăsimi esențiale","anti-inflamator"],horm:"Avocado furnizează acizi grași mononesaturați esențiali pentru producerea hormonilor steroizi.",
- ing:[["1 buc","avocado copt"],["1 buc","roșie mică, tocată"],["¼ buc","ceapă roșie, tocată fin"],["1 cățel","usturoi zdrobit"],["Zeamă","de la 1 lime sau lămâie"],["Sare","piper, chili după gust"],["Legume","pentru dipuit: ardei, castraveți, morcovi"]],
- steps:["Zdrobește avocado cu o furculiță (nu prea fin — textura rustică e mai bună).","Adaugă roșia, ceapa, usturoiul și zeama de lime.","Condimentează cu sare, piper și chili după gust.","Servește imediat cu legumele tăiate bastonașe."],
- tip:"Guacamole se oxidează rapid — consumă în 30 minute sau păstrează cu o peliculă lipită direct pe suprafață."},
-
-dnP5:{slot:"Seară",name:"Salată de Edamame cu Avocado și Salată Verde",kcal:380,p:18,f:22,c:26,veg:true,
- tags:["fitoestrogeni","omega-3"],horm:"Edamame conține izoflavone — fitoestrogeni cu efect protectiv și echilibrant asupra hormonilor feminini.",
- ing:[["150g","edamame fiert și decojit"],["80g","avocado, cuburi"],["80g","salată verde sau mix"],["1 buc","castravete, feliat"],["Dressing","1 ling. sos soia, 1 ling. ulei susan, zeamă lămâie, ½ ling. miere"]],
- steps:["Gătește edamame conform instrucțiunilor, răcește sub jet rece.","Pregătește dressingul: sos soia + ulei susan + lămâie + miere.","Aranjează salata, castravetele, edamame și avocado în bol.","Toarnă dressingul și amestecă ușor."],
- tip:""},
-
-// ═══ SNACK ════════════════════════════════════════════════════════════════════
-sn1:{slot:"Gustare",name:"Iaurt Grecesc cu Scorțișoară și Mere",kcal:300,p:36,f:7,c:38,
- ing:[["350g","iaurt grecesc 2%"],["2 buc","mere mici, cuburi"],["Scorțișoară","pudră"],["½ ling.","stevia sau eritritol"]],
- steps:["Pune iaurtul în bol.","Adaugă merele și scorțișoara.","Presară îndulcitorul. Amestecă ușor."],
- tip:""},
-
-sn2:{slot:"Gustare",name:"Cremă de Iaurt cu Cacao și Unt de Arahide",kcal:220,p:14,f:9,c:22,
- tags:["magneziu","serotonină"],horm:"Cacaoa neagră conține magneziu, mineral esențial pentru producerea progesteronului.",
- ing:[["200g","iaurt grecesc 2%"],["1 ling.","cacao pudră neagră"],["1 ling.","unt de arahide natural"],["1-2 ling.","miere"],["Un praf","scorțișoară"]],
- steps:["Amestecă toate ingredientele cu un tel mic.","Ajustează dulceața cu miere.","Mănâncă imediat sau ține la frigider max 24 ore."],
- tip:""},
-
-sn3:{slot:"Gustare",name:"Mere cu Tahini și Miere",kcal:180,p:5,f:8,c:22,
- tags:["microbiom","detox estrogen"],horm:"Merele conțin pectină care hrănește bacteriile benefice din intestin, reglând indirect metabolismul estrogenului.",
- ing:[["2 buc","mere medii"],["2 ling.","tahini"],["1 ling.","miere"],["Un praf","scorțișoară"]],
- steps:["Taie merele felii.","Amestecă tahini cu mierea și o picătură de apă.","Servește cu sosul și scorțișoară."],tip:""},
-
-sn4:{slot:"Gustare",name:"Iaurt Grecesc cu Nuci și Miere",kcal:220,p:18,f:10,c:16,
- tags:["omega-3","fitosteroli"],horm:"Nucile conțin omega-3 ALA și fitosteroli care susțin echilibrul hormonal.",
- ing:[["200g","iaurt grecesc 2%"],["20g","nuci tocate grosier"],["1 ling.","miere"],["½ ling.","scorțișoară"]],
- steps:["Pune iaurtul în bol.","Adaugă nucile, mierea și scorțișoara.","Amestecă ușor și servește imediat."],tip:""},
-
-sn5:{slot:"Gustare",name:"Pâine cu Avocado și Cottage Cheese",kcal:320,p:18,f:14,c:28,
- tags:["grăsimi bune","calciu"],horm:"",
- ing:[["1 felie","pâine integrală groasă"],["50g","avocado"],["50g","cottage cheese"],["Sare","piper, fulgi chili, zeamă lămâie"],["5g","semințe dovleac"]],
- steps:["Prăjește pâinea.","Zdrobește avocado cu sare, piper, lămâie.","Pune avocado pe pâine, adaugă cottage cheese.","Presară semințele și chili."],tip:""},
-
-// ═══ DESSERTS ═════════════════════════════════════════════════════════════════
-ds1:{slot:"Desert",name:"Mousse de Avocado cu Cacao și Miere",kcal:180,p:3,f:14,c:14,dessert:true,
- tags:["grăsimi hormonale","anti-oxidant"],horm:"Avocado furnizează grăsimi mononesaturate esențiale pentru producerea hormonilor steroizi.",
- ing:[["1 buc","avocado copt (120g)"],["2 ling.","cacao pudră neagră"],["1-2 ling.","miere"],["3 ling.","lapte de cocos"],["1 ling.","extract de vanilie"],["Un praf","sare"]],
- steps:["Scoate miezul avocado și pune-l în blender.","Adaugă cacaoa, mierea, laptele de cocos, vanilia și sarea.","Mixează 1-2 minute până obții cremă mătăsoasă.","Răcește 15-20 minute la frigider. Servește cu fructe de pădure."],
- tip:"Cu cât avocado-ul e mai copt (coaja foarte închisă, moale la apăsare), cu atât mousse-ul iese mai cremos."},
-
-ds2:{slot:"Desert",name:"Biluțe de Curmale cu Nuci și Cacao",kcal:160,p:3,f:8,c:20,dessert:true,
- tags:["energie naturală","magneziu"],horm:"Curmalele furnizează potasiu și magneziu natural. Nucile conțin omega-3 anti-inflamator.",
- ing:[["80g","curmale Medjool (4-5 buc), fără sâmburi"],["40g","nuci"],["1 ling.","cacao pudră"],["Un praf","sare"],["Fulgi de cocos","pentru acoperire (opțional)"]],
- steps:["Mixează în robot curmale, nuci, cacao și sarea până obții pastă lipicioasă.","Dacă e prea uscat, adaugă 1 ling. apă. Dacă e prea lipicios, adaugă mai multe nuci.","Formează 6-8 biluțe cu palmele ușor umezite.","Tăvălește prin fulgi de cocos sau cacao. Frigider 20 minute."],
- tip:"Se păstrează 2 săptămâni la frigider sau 3 luni la congelator."},
-
-ds3:{slot:"Desert",name:"Cheesecake la Pahar cu Fructe de Pădure",kcal:200,p:14,f:8,c:18,dessert:true,
- tags:["calciu","serotonină"],horm:"Brânza proaspătă furnizează calciu necesar pentru metabolizarea estrogenului.",
- ing:[["1 buc","biscuit digestiv (15g), sfărâmat"],["5g","unt topit"],["100g","brânza proaspătă slabă (quark sau Philadelphia light)"],["50g","iaurt grecesc 2%"],["1 ling.","miere"],["Esență","vanilie, zeamă ¼ lămâie"],["40g","mix fructe de pădure"]],
- steps:["Amestecă biscuitul cu untul topit. Apasă pe fundul unui pahar.","Mixează brânza cu iaurtul, mierea, vanilia și lămâia până e cremă fină.","Toarnă crema peste baza și nivelează.","Adaugă fructele deasupra. Lasă minim 20 min la frigider."],
- tip:"Nu omite zeama de lămâie — transformă gustul lactat într-unul fresh și elegant."},
-
-ds4:{slot:"Desert",name:"Banana Congelată cu Unt de Arahide și Ciocolată",kcal:229,p:5,f:11,c:30,dessert:true,
- tags:["serotonină","triptofan"],horm:"Banana coaptă conține triptofan — precursor direct al serotoninei, hormonul bunei stări.",
- ing:[["1 buc","banană mare coaptă (150g), rondele"],["15g","unt de arahide natural"],["10g","ciocolată neagră >70%, topită"],["Un praf","sare de mare"]],
- steps:["Taie banana în rondele de 1 cm.","Pune pe tăviță cu hârtie de copt. Congelator 2 ore.","Scoate rondelele, unge cu unt de arahide.","Stropește cu ciocolată topită și sare de mare. Servește imediat."],
- tip:"Dacă nu ai timp de congelat, servește la temperatura camerei — la fel de gustos."},
-
-ds5:{slot:"Desert",name:"Mini Cheesecake cu Iaurt Grecesc la Cuptor",kcal:280,p:18,f:10,c:30,dessert:true,
- tags:["proteine","calciu"],horm:"",
- ing:[["1 buc","ou"],["130g","iaurt grecesc 2%"],["1 ling.","miere sau eritritol"],["30g","ovăz măcinat (fulgi blenduiți)"],["½ ling.","praf de copt"],["1 praf","sare"],["Fructe de pădure","sau fulgi ciocolată pentru topping"]],
- steps:["Amestecă oul, iaurtul, mierea, ovăzul, praful de copt și sarea.","Toarnă în formă mică.","Gătește: 2-3 min la microunde, 15-20 min la 165°C air fryer sau 25 min la 180°C cuptor.","Lasă 10-15 min la răcit înainte de servire."],
- tip:"Adaugă extract de vanilie sau scorțișoară pentru gust mai bogat."},
-
-ds6:{slot:"Desert",name:"Snickers Light cu Unt de Arahide și Miere",kcal:191,p:5,f:9,c:21,dessert:true,
- tags:["energie naturală","grăsimi sănătoase"],horm:"",
- ing:[["2 buc","rondele de orez expandat, sfărâmate"],["80g","unt de arahide natural"],["60g","miere"],["20g","arahide prăjite nesărate, tocate"],["20g","ciocolată neagră >75%, topită"],["25g","cacao pudră"],["80ml","lapte 1.5%"]],
- steps:["Amestecă rondelele sfărâmate cu untul de arahide, mierea și arahidele.","Pune în formă și tasează bine. Frigider 15 min.","Topește ciocolata + lapte + cacao + sare. Amestecă.","Toarnă deasupra. Frigider 30 min. Taie în 6 bucăți."],
- tip:"Pot fi păstrate la congelator până la 3 luni."},
-
-ds7:{slot:"Desert",name:"Clătite Dulci cu Brânza și Mere Coapte",kcal:349,p:23,f:9,c:42,dessert:true,
- tags:["calciu","fibre"],horm:"",
- ing:[["1 buc","ou"],["30g","făină de ovăz"],["100ml","lapte"],["60g","brânza dulce 5%"],["100g","măr"],["Scorțișoară","după gust"],["1 ling.","miere"]],
- steps:["Amestecă oul, făina și laptele. Gătește 2 clătite în tigaie antiaderentă.","Toacă mărul cuburi. Călește 2-3 min cu ½ ling. scorțișoară și miere.","Amestecă mărul cu brânza dulce.","Umple clătitele cu amestecul de brânza-mere."],
- tip:"Adaugă ghimbir pudră pentru un gust de toamnă intens."},
-
-ds8:{slot:"Desert",name:"Tiramisu Light cu Espresso și Iaurt Grecesc",kcal:230,p:10,f:10,c:26,dessert:true,
- tags:["antioxidanți cafea","calciu"],horm:"",
- ing:[["1 shot","espresso tare (40ml), răcit"],["6 buc","biscuiți savoiardi sau simpli"],["100g","mascarpone light sau brânza proaspătă light"],["50g","iaurt grecesc 2%"],["1 ling.","miere"],["1 ling.","extract de vanilie"],["1 ling.","cacao pudră"]],
- steps:["Amestecă mascarpone cu iaurtul, mierea și vanilia.","Înmoaie rapid fiecare biscuit în espresso răcit (1-2 secunde).","Aranjează un strat de biscuiți în vas sau pahar.","Adaugă un strat de cremă. Repetă. Presară cacao. Frigider minim 2 ore."],
- tip:"Înmuierea biscuiților e critică: 1-2 secunde în espresso, nu mai mult."},
-
-ds9:{slot:"Desert",name:"Tarte de Ciocolată Neagră cu Fructe de Pădure",kcal:210,p:4,f:11,c:24,dessert:true,
- tags:["serotonină","anti-cortisol"],horm:"Ciocolata neagră >70% crește serotonina și reduce cortisol — hormonul stresului.",
- ing:[["3 ling.","cacao pudră neagră (alcalinizată)"],["2 ling.","ulei de cocos topit"],["2 ling.","miere"],["Un praf","sare de mare"],["50g","mix fructe de pădure"],["5g","fulgi ciocolată neagră >70%"]],
- steps:["Amestecă cacaoa cu uleiul de cocos topit, mierea și sarea — obții o ganache simplă.","Toarnă în pahare mici sau forme de muffin.","Adaugă fructele de pădure deasupra și câțiva fulgi de ciocolată.","Frigider minim 30 minute — ganache-ul se solidifică."],
- tip:"Cu cât cacaoa e mai neagră (alcalinizată), cu atât mai mulți antioxidanți și mai puțin zahăr natural."},
-
-ds10:{slot:"Desert",name:"Îngheţată Proteică cu Iaurt și Scorțișoară",kcal:220,p:18,f:4,c:28,dessert:true,
- tags:["proteine","răcoritoare"],horm:"",
- ing:[["200g","iaurt grecesc 0% sau 2%"],["1 ling.","miere"],["30ml","lapte de migdale neîndulcit"],["1 ling.","scorțișoară"],["Opțional","30g banană congelată pentru textură extra cremoasă"]],
- steps:["Pune toate ingredientele în blender.","Mixează 1-2 minute până obții cremă fină și aerată.","Transferă în recipient și pune la congelator 1 oră.","Scoate și amestecă înainte de servire pentru textură mai aerată."],
- tip:""},
-
-ds11:{slot:"Desert",name:"Budincă Proteică de Ciocolată și Banană în Cană",kcal:200,p:12,f:5,c:28,dessert:true,
- tags:["magneziu","triptofan"],horm:"Combinația cacao + banană = magneziu + triptofan pentru producerea progesteronului și serotoninei.",
- ing:[["60g","banană coaptă"],["10g","cacao pudră"],["20g","iaurt grecesc 2% (înlocuitor proteic natural)"],["50ml","lapte de migdale neîndulcit"],["5g","chipsuri ciocolată neagră"],["1 ling.","miere"]],
- steps:["Pasează banana în o cană pentru microunde.","Adaugă iaurtul, cacaoa, laptele și mierea. Amestecă bine.","Microunde 45-60 secunde.","Adaugă chipsurile de ciocolată pe deasupra cât e fierbinte."],
- tip:"45 secunde = interior cremos. 60 secunde = textură mai fermă."},
-
-ds12:{slot:"Desert",name:"Cheesecake Capovoltă Fără Coacere",kcal:303,p:10,f:12,c:26,dessert:true,
- tags:["calciu","probiotice"],horm:"",
- ing:[["30g","biscuiți fără zahăr, zdrobiți"],["5ml","ulei de cocos topit"],["80g","cremă de brânza light"],["60g","iaurt grecesc 2%"],["1 ling.","eritritol sau miere"],["30g","mix fructe de pădure pasate sau proaspete"]],
- steps:["Zdrobește biscuiții și amestecă cu uleiul de cocos. Apasă în pahar/bol mic. Frigider 10 min.","Amestecă crema de brânza cu iaurtul și îndulcitorul.","Toarnă jumătate din cremă, adaugă fructele pasate, restul de cremă.","Frigider minim 2 ore. Servește rece."],
- tip:"Adaugă câteva picături de zeamă de lămâie în cremă pentru gust mai fresh."}
+// ═══════════════════════════════════════════════════
+// USER STATE
+// ═══════════════════════════════════════════════════
+let U = {
+  gender:'F', age:0, height:0, weight:0, targetWeight:0,
+  actMult:1.375, deficit:-500,
+  bmr:0, tdee:0, target:0, postTarget:0,
+  name:'', weeks:0
 };
-
-// ─── WEEK/DAY STRUCTURE (4 weeks × 7 days) ───────────────────────────────────
-
-const STRUCTURE = [
-// Săptămâna 1
-[
- {type:'post',bf:'bfP1',lu:'luP1',dn:'dnP1',sn:'',ds:'ds1'},        // Lun
- {type:'norm',bf:'bfN1',lu:'luN1',dn:'dnN1',sn:'sn2',ds:'ds2'},     // Mar
- {type:'post',bf:'bfP2',lu:'luP2',dn:'dnP2',sn:'',ds:'ds3'},        // Mie
- {type:'norm',bf:'bfN2',lu:'luN2',dn:'dnN2',sn:'sn1',ds:'ds4'},     // Joi
- {type:'post',bf:'bfP3',lu:'luP3',dn:'dnP3',sn:'',ds:'ds5'},        // Vin
- {type:'norm',bf:'bfN3',lu:'luN3',dn:'dnN3',sn:'sn4',ds:'ds6'},     // Sâm
- {type:'norm',bf:'bfN4',lu:'luN4',dn:'dnN4',sn:'sn3',ds:'ds7'},     // Dum
-],
-// Săptămâna 2
-[
- {type:'post',bf:'bfP4',lu:'luP4',dn:'dnP4',sn:'',ds:'ds8'},
- {type:'norm',bf:'bfN5',lu:'luN5',dn:'dnN5',sn:'sn2',ds:'ds9'},
- {type:'post',bf:'bfP5',lu:'luP5',dn:'dnP5',sn:'',ds:'ds10'},
- {type:'norm',bf:'bfN6',lu:'luN6',dn:'dnN6',sn:'sn1',ds:'ds11'},
- {type:'post',bf:'bfP6',lu:'luP6',dn:'dnP1',sn:'',ds:'ds12'},
- {type:'norm',bf:'bfN7',lu:'luN7',dn:'dnN1',sn:'sn4',ds:'ds1'},
- {type:'norm',bf:'bfN8',lu:'luN8',dn:'dnN2',sn:'sn5',ds:'ds2'},
-],
-// Săptămâna 3
-[
- {type:'post',bf:'bfP1',lu:'luP7',dn:'dnP2',sn:'',ds:'ds3'},
- {type:'norm',bf:'bfN1',lu:'luN4',dn:'dnN3',sn:'sn2',ds:'ds4'},
- {type:'post',bf:'bfP2',lu:'luP8',dn:'dnP3',sn:'',ds:'ds5'},
- {type:'norm',bf:'bfN3',lu:'luN1',dn:'dnN5',sn:'sn1',ds:'ds6'},
- {type:'post',bf:'bfP3',lu:'luP9',dn:'dnP4',sn:'',ds:'ds7'},
- {type:'norm',bf:'bfN5',lu:'luN5',dn:'dnN6',sn:'sn4',ds:'ds8'},
- {type:'norm',bf:'bfN2',lu:'luN6',dn:'dnN4',sn:'sn3',ds:'ds9'},
-],
-// Săptămâna 4
-[
- {type:'post',bf:'bfP4',lu:'luP1',dn:'dnP5',sn:'',ds:'ds10'},
- {type:'norm',bf:'bfN6',lu:'luN3',dn:'dnN7',sn:'sn5',ds:'ds11'},
- {type:'post',bf:'bfP5',lu:'luP2',dn:'dnP1',sn:'',ds:'ds12'},
- {type:'norm',bf:'bfN7',lu:'luN2',dn:'dnN2',sn:'sn2',ds:'ds1'},
- {type:'post',bf:'bfP6',lu:'luP3',dn:'dnP2',sn:'',ds:'ds2'},
- {type:'norm',bf:'bfN4',lu:'luN7',dn:'dnN3',sn:'sn1',ds:'ds3'},
- {type:'norm',bf:'bfN8',lu:'luN8',dn:'dnN5',sn:'sn4',ds:'ds4'},
-]
-];
-
-const WEEK_NAMES = ['Săptămâna 1','Săptămâna 2','Săptămâna 3','Săptămâna 4'];
-const DAY_LABELS = ['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
-const DAY_FULL = ['Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă','Duminică'];
-
-// ─── BUILD UI ────────────────────────────────────────────────────────────────
-let curWeek = 0;
-let curDay = [0,0,0,0];
-
-function kcalDay(dayObj) {
-  const keys = [dayObj.bf, dayObj.lu, dayObj.dn, dayObj.sn, dayObj.ds].filter(Boolean);
-  return keys.reduce((s,k)=>s+(R[k]?R[k].kcal:0),0);
+ 
+let selAct=null, selGoal=null;
+ 
+function setGender(g){
+  U.gender=g;
+  document.getElementById('gF').classList.toggle('on',g==='F');
+  document.getElementById('gM').classList.toggle('on',g==='M');
 }
-
-function buildRecipe(key, isSnack) {
-  const r = R[key];
-  if (!r) return '';
-  const isDessert = !!r.dessert;
-  let html = `<div class="mc${isDessert?' dessert':''}" onclick="toggleMC(this)">
+function setOpt(btn,type){
+  const parent=btn.closest('.ob-options');
+  parent.querySelectorAll('.ob-opt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(type==='act') U.actMult=parseFloat(btn.dataset.act);
+  if(type==='goal') U.deficit=parseInt(btn.dataset.def);
+}
+function goStep(n){
+  if(n===2){
+    U.age=parseInt(document.getElementById('inAge').value)||0;
+    U.height=parseInt(document.getElementById('inH').value)||0;
+    U.weight=parseFloat(document.getElementById('inW').value)||0;
+    U.targetWeight=parseFloat(document.getElementById('inTW').value)||0;
+    if(!U.age||!U.height||!U.weight||!U.targetWeight){
+      alert('Te rog completează toate câmpurile!');return;
+    }
+    if(U.targetWeight>=U.weight&&U.deficit<0){U.deficit=0;}
+  }
+  if(n===4) calcAndShow();
+  document.querySelectorAll('.ob-step').forEach((s,i)=>s.classList.toggle('on',i===n-1));
+  document.querySelectorAll('.ob-prog-dot').forEach((d,i)=>d.classList.toggle('on',i<n));
+}
+ 
+function calcAndShow(){
+  // Mifflin-St Jeor
+  if(U.gender==='F'){
+    U.bmr = 10*U.weight + 6.25*U.height - 5*U.age - 161;
+  } else {
+    U.bmr = 10*U.weight + 6.25*U.height - 5*U.age + 5;
+  }
+  U.tdee = Math.round(U.bmr * U.actMult);
+  U.target = Math.max(1200, U.tdee + U.deficit);
+  U.postTarget = Math.round(U.target * 0.65);
+ 
+  const diff = Math.abs(U.weight - U.targetWeight);
+  const weeklyLoss = U.deficit===0 ? 0 : Math.abs(U.deficit)/500*0.5;
+  U.weeks = weeklyLoss>0 ? Math.ceil(diff/weeklyLoss) : 0;
+ 
+  const goalText = {'-250':'Slăbire ușoară','-500':'Slăbire moderată','-750':'Slăbire accelerată','0':'Menținere'}[String(U.deficit)]||'Menținere';
+  const bmiVal = (U.weight/(U.height/100)**2).toFixed(1);
+  const bmiLabel = bmiVal<18.5?'Subponderal':bmiVal<25?'Normal':bmiVal<30?'Supraponderal':'Obezitate';
+ 
+  document.getElementById('obResults').innerHTML=`
+    <div class="big-num">${U.target}</div>
+    <div class="big-unit">kcal/zi în zilele normale</div>
+    <div class="ob-results-grid">
+      <div class="ob-res-chip"><div class="v">${U.bmr}</div><div class="l">BMR (metabol. bază)</div></div>
+      <div class="ob-res-chip"><div class="v">${U.tdee}</div><div class="l">Menținere</div></div>
+      <div class="ob-res-chip"><div class="v">${U.postTarget}</div><div class="l">Kcal zile post</div></div>
+      <div class="ob-res-chip"><div class="v">${bmiVal}</div><div class="l">IMC · ${bmiLabel}</div></div>
+    </div>
+    <div class="ob-timeline">
+      <strong style="color:#9FE1CB">Obiectiv:</strong> ${goalText}<br>
+      ${U.deficit!==0?`De la <strong>${U.weight}kg</strong> la <strong>${U.targetWeight}kg</strong> = <strong>${diff}kg</strong> de slăbit<br>
+      Timp estimat: <strong>~${U.weeks} săptămâni</strong> (${Math.round(U.weeks/4.3)} luni)<br>`:
+      `Menținere la <strong>${U.weight}kg</strong><br>`}
+      Zile de post: <strong>${U.postTarget} kcal</strong> (Luni, Miercuri, Vineri)
+    </div>`;
+}
+ 
+function startApp(){
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('app').style.display='block';
+  buildApp();
+}
+function resetApp(){
+  document.getElementById('onboarding').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('wTabs').innerHTML='';
+  document.getElementById('wViews').innerHTML='';
+}
+ 
+// ═══════════════════════════════════════════════════
+// RECIPE DATABASE
+// ═══════════════════════════════════════════════════
+// Base kcal at standard portions — scaled per user
+const RECIPES = {
+bfN1:{slot:"Dimineață",name:"Smoothie Bowl cu Iaurt Grecesc și Afine",bKcal:310,p:24,f:8,c:36,tags:["probiotice","antioxidanți"],horm:"Iaurtul grecesc furnizează probiotice care reglează axa intestin-hormoni. Afinele reduc stresul oxidativ și sprijină echilibrul estrogenului.",ing:[["300g","iaurt grecesc 2%"],["100g","afine (proaspete sau congelate)"],["15g","semințe de in măcinate"],["1 ling.","miere"],["20g","fulgi de ovăz"],["10g","nuci tocate"],["½ ling.","scorțișoară"]],steps:["Pune iaurtul în bowl și amestecă ușor cu o furculiță.","Adaugă afinele întregi sau ușor pasate.","Presară semințele de in, fulgii de ovăz, nucile și scorțișoara.","Stropește cu miere și servește imediat."],tip:"Semințele de in trebuie să fie măcinate — întregi trec nedigerate și nu eliberează lignanii benefici."},
+ 
+bfN2:{slot:"Dimineață",name:"Pancakes Proteice cu Iaurt, Afine și Miere",bKcal:360,p:22,f:12,c:40,tags:["glicemie stabilă","beta-glucan"],horm:"Făina de ovăz conține avenantramide cu efect estrogenic blând și beta-glucan care stabilizează glicemia.",ing:[["2 buc","ouă întregi"],["50g","iaurt grecesc 2%"],["40g","făină de ovăz"],["½ ling.","praf de copt"],["1 ling.","miere"],["1 ling.","extract de vanilie"],["Un praf","sare"],["60g","afine pentru topping"],["1 ling.","miere pentru topping"]],steps:["Amestecă ouăle cu iaurtul, mierea și vanilia.","Adaugă treptat făina de ovăz, praful de copt și sarea. Nu bate excesiv.","Coace în tigaie antiaderentă la foc mic, 2-3 minute per parte. Întoarce când apar bule la suprafață.","Servește cu afine și miere."],tip:"Pancakes perfecte = foc mic și răbdare. La foc mare se ard pe exterior și rămân crude înăuntru."},
+ 
+bfN3:{slot:"Dimineață",name:"Omletă cu Legume, Feta și Pâine Integrală",bKcal:340,p:26,f:18,c:20,tags:["colină","precursori hormonali"],horm:"Ouăle conțin colesterol bun și colină — material de bază pentru toți hormonii steroizi (estrogen, progesteron, testosteron).",ing:[["3 buc","ouă"],["30g","feta sau brânza de capră"],["50g","spanac proaspăt"],["5 buc","roșii cherry, înjumătățite"],["1 ling.","ulei de măsline"],["Sare","piper, oregano"],["1 felie","pâine integrală, prăjită"]],steps:["Bate ouăle cu sare, piper și oregano.","Încălzește uleiul, sotează spanacul și roșiile 1 minut.","Toarnă ouăle și gătește la foc mic 2-3 minute fără să amesteci.","Presară feta sfărâmată, îndoaie omleta. Servește cu pâine prăjită."],tip:"Secretul omletei pufoase: foc mic și răbdare. Dacă amesteci, iese scrambled eggs."},
+ 
+bfN4:{slot:"Dimineață",name:"French Toast cu Banană Caramelizată",bKcal:360,p:18,f:12,c:46,tags:["serotonină","triptofan"],horm:"Banana + miere furnizează triptofan și glucoză în combinația optimă pentru producerea serotoninei, hormonul stării de bine.",ing:[["2 felii","pâine integrală groasă (80g)"],["2 buc","ouă"],["50ml","lapte 1.5%"],["1 ling.","miere"],["1 ling.","extract de vanilie"],["½ ling.","scorțișoară"],["1 buc","banană coaptă, feliată"],["5g","unt sau ulei de cocos"]],steps:["Bate ouăle cu laptele, mierea, vanilia și scorțișoara.","Înmoaie feliile de pâine 30 secunde pe fiecare parte.","Gătește în tigaie cu unt la foc mediu, 2-3 minute per parte.","Caramelizează banana în aceeași tigaie cu 1 ling. miere, 1-2 minute. Servește deasupra."],tip:""},
+ 
+bfN5:{slot:"Dimineață",name:"Terci de Ovăz Tiramisu Sănătos",bKcal:380,p:16,f:10,c:52,tags:["energie","antioxidanți cafea"],horm:"Cafeaua conține polifenoli care protejează glandele suprarenale producătoare de cortisol și DHEA.",ing:[["45g","fulgi de ovăz"],["150ml","lapte 1.5%"],["1 shot","espresso (40ml), răcit"],["1 praf","sare"],["50g","iaurt grecesc 2%"],["10g","cacao pudră"],["1 ling.","miere"]],steps:["Gătește ovăzul cu laptele la foc mediu 5-7 minute, amestecând.","Toarnă în bol. Amestecă iaurtul cu mierea și pune ca strat de cremă deasupra.","Toarnă espresso-ul răcit deasupra.","Presară cacao generos cu o sită fină."],tip:"Varianta overnight: amestecă totul seara și pune la frigider — gata în 2 minute dimineața."},
+ 
+bfN6:{slot:"Dimineață",name:"Avocado Toast cu Ou Poșat și Semințe",bKcal:290,p:16,f:18,c:18,tags:["grăsimi esențiale","precursori hormonali"],horm:"Avocado furnizează acizi grași mononesaturați esențiali pentru producerea tuturor hormonilor steroizi.",ing:[["1 felie","pâine integrală groasă, prăjită"],["70g","avocado (½ mic)"],["1 buc","ou proaspăt"],["1 ling.","oțet alb (pentru poșare)"],["Sare","piper, fulgi de chili, zeamă lămâie"],["5g","semințe de dovleac"]],steps:["Fierbe apă cu oțetul. Creează un vârtej și alunecă oul în centru. Fierbe 3 minute.","Prăjește pâinea.","Zdrobește avocado cu sare, piper și zeama de lămâie.","Asamblează: pâine → avocado → ou poșat → semințe → sare de mare."],tip:"Trucul oului poșat perfect: oul trebuie să fie foarte proaspăt — albușul se coagulează strâns."},
+ 
+bfN7:{slot:"Dimineață",name:"Sandviș Cald Proteic cu Ou și Cașcaval",bKcal:270,p:15,f:18,c:17,tags:["proteine","rapid"],horm:"",ing:[["2 felii","pâine integrală"],["2 buc","ouă întregi"],["20g","cașcaval light"],["20g","avocado felii"],["Sare","piper, boia"],["1 ling.","ulei de măsline"]],steps:["Gătește ouăle bătute ca omletă în puțin ulei.","Rumenește ușor feliile de pâine.","Asamblează: pâine + ouă + cașcaval + avocado.","Reîncălzește 1 minut în tigaie să se topească brânza."],tip:""},
+ 
+bfN8:{slot:"Dimineață",name:"Clătite Proteice cu Banană și Scorțișoară",bKcal:320,p:20,f:10,c:38,tags:["energie"],horm:"Scorțișoara stabilizează glicemia și reduce poftele de dulce.",ing:[["150g","albușuri (4-5 buc sau cutie)"],["1 buc","banană coaptă (120g), pasată"],["30g","fulgi de ovăz"],["½ ling.","praf de copt"],["1 ling.","scorțișoară"],["1 ling.","miere pentru servire"]],steps:["Amestecă albușurile cu banana pasată, ovăzul, praful de copt și scorțișoara.","Gătește clătite mici în tigaie antiaderentă la foc mic, 2 minute per parte.","Servește cu miere sau fructe proaspete."],tip:"Cu cât banana e mai coaptă (pete maro), cu atât clătitele sunt mai dulci natural."},
+ 
+bfP1:{slot:"Dimineață",name:"Budincă de Chia cu Mango și Lapte de Cocos",bKcal:320,p:9,f:16,c:38,veg:true,tags:["fitoestrogeni","energie stabilă"],horm:"Semințele de chia conțin lignani — fitoestrogeni care ajută la echilibrarea estrogenului. Semințele de in adaugă efect sinergic.",ing:[["50g","semințe de chia"],["200ml","lapte de cocos light"],["100g","mango congelat"],["10g","semințe de in măcinate"],["1 ling.","miere"],["½ ling.","scorțișoară"],["1 ling.","extract de vanilie"]],steps:["Amestecă chia cu laptele de cocos, semințele de in și vanilia. Amestecă 1 minut bine.","Lasă 5 minute, amestecă din nou (altfel chia se adună la fund).","Pune la frigider minim 30 minute sau peste noapte.","Adaugă mango tăiat cuburi, miere și scorțișoară la servire."],tip:"Pregătește seara — dimineața ai micul dejun gata în 2 minute."},
+ 
+bfP2:{slot:"Dimineață",name:"Ovăz Cald cu Mere Caramelizate și Scorțișoară",bKcal:320,p:8,f:8,c:56,veg:true,tags:["reglare glicemie","anti-inflamator"],horm:"Ovăzul conține beta-glucan care reglează glicemia și reduce cortisolul. Merele conțin quercetină cu efect anti-estrogenic protectiv.",ing:[["60g","fulgi de ovăz"],["250ml","lapte de ovăz"],["1 buc","măr (150g), cuburi"],["1 ling.","ulei de cocos"],["1 ling.","miere"],["1 ling.","scorțișoară"],["10g","nuci tocate"]],steps:["Călește cuburile de măr în uleiul de cocos 2-3 minute cu ½ ling. scorțișoară.","Fierbe ovăzul cu laptele vegetal la foc mediu 5-7 minute.","Transferă în bol, pune merele caramelizate deasupra.","Stropește cu miere și adaugă nucile."],tip:"Ovăzul gătit cu lapte vegetal (nu apă) are textură mult mai cremoasă."},
+ 
+bfP3:{slot:"Dimineață",name:"Budincă de Chia cu Căpșuni și Lapte de Ovăz",bKcal:310,p:9,f:13,c:42,veg:true,tags:["fibre","antioxidanți"],horm:"",ing:[["50g","semințe de chia"],["240ml","lapte de ovăz"],["150g","căpșuni proaspete sau congelate"],["1 ling.","miere"],["1 ling.","extract de vanilie"]],steps:["Amestecă chia cu laptele de ovăz și vanilia. Lasă 3 min, amestecă din nou.","Pune la frigider minimum 30 minute sau peste noapte.","Pasează căpșunile sau taie-le felii. Amestecă cu mierea.","Adaugă căpșunile deasupra la servire."],tip:""},
+ 
+bfP4:{slot:"Dimineață",name:"Smoothie Verde cu Spanac, Banană și Ghimbir",bKcal:280,p:6,f:8,c:44,veg:true,tags:["detox estrogen","energie"],horm:"Spanacul conține indol-3-carbinol care ajută ficatul să metabolizeze corect estrogenul în exces.",ing:[["60g","spanac proaspăt"],["1 buc","banană coaptă (120g)"],["200ml","lapte de migdale"],["10g","semințe de in măcinate"],["1 ling.","miere"],["½ ling.","ghimbir proaspăt ras"]],steps:["Pune spanacul cu laptele în blender. Mixează 30 secunde.","Adaugă banana, semințele de in, mierea și ghimbirul.","Mixează 45-60 secunde până e complet omogen.","Servește imediat."],tip:"Dacă blenderul nu e puternic, adaugă spanacul ultimul."},
+ 
+bfP5:{slot:"Dimineață",name:"Budincă de Ovăz cu Afine și Nuci",bKcal:380,p:10,f:14,c:52,veg:true,tags:["omega-3 ALA","antioxidanți"],horm:"Nucile conțin omega-3 ALA și fitosteroli care susțin echilibrul hormonal.",ing:[["50g","fulgi de ovăz"],["150ml","lapte de ovăz"],["60g","afine"],["10g","nuci tocate"],["1 ling.","miere"],["½ ling.","scorțișoară"]],steps:["Pune ovăzul cu laptele la foc mediu, amestecând, 5-7 minute.","Adaugă jumătate din afine în ultimul minut.","Toarnă în bol, adaugă afinele rămase și nucile.","Stropește cu miere și scorțișoară."],tip:""},
+ 
+luN1:{slot:"Prânz",name:"Orez Fajita cu Pui și Mozzarella Light",bKcal:484,p:31,f:17,c:47,tags:["proteine complete"],horm:"",ing:[["250g","piept de pui, fâșii"],["100g","orez basmati (crud)"],["1 buc","ardei roșu + 1 galben, fâșii"],["1 buc","ceapă roșie feliată"],["1 cățel","usturoi zdrobit"],["1 ling.","ulei de măsline"],["1 ling.","boia dulce + ½ chimion + ½ paprika afumată"],["Zeamă","de la ½ lămâie, sare, piper"],["40g","mozzarella light rasă"]],steps:["Fierbe orezul 15-18 minute. Scurge.","Marinează puiul 10 min cu condimentele și lămâia. Rumenește în ulei 5-6 minute.","Sotează ceapa și ardeii 4-5 minute în aceeași tigaie.","Adaugă puiul și orezul, amestecă 2-3 minute. Presară mozzarella, acoperă 1 minut."],tip:"Servește cu 1-2 linguri de iaurt grecesc 2% alături."},
+ 
+luN2:{slot:"Prânz",name:"Pui cu Unt și Usturoi cu Piure Cremos",bKcal:480,p:38,f:14,c:46,tags:["satiație","reglare cortisol"],horm:"Cartofii fierți cu coajă au indice glicemic mai mic și conțin potasiu care reglează producția de cortisol.",ing:[["150g","piept de pui, cuburi"],["15g","unt"],["2 căței","usturoi fin tocați"],["1 ling.","ulei de măsline"],["Sare","piper, boia, pătrunjel"],["150g","cartofi fierți cu coajă"],["100ml","lapte cald 1.5%"],["50g","cremă brânza light"]],steps:["Gătește puiul în ulei de măsline 6-8 minute la foc mediu-mare.","Reduce la minim, adaugă untul, usturoiul și pătrunjelul. Amestecă 1 minut.","Zdrobește cartofii fierți cu laptele cald și crema de brânza.","Servește puiul cu sosul deasupra piureului."],tip:"Secretul piureului cremos: laptele trebuie să fie fierbinte când îl adaugi."},
+ 
+luN3:{slot:"Prânz",name:"McChicken Homemade cu Sos de Iaurt",bKcal:399,p:31,f:15,c:33,tags:["proteine"],horm:"",ing:[["260g","piept de pui tocat"],["Condimente","sare, piper, boia, usturoi pudră"],["30g","fulgi de porumb mărunțiți"],["40g","iaurt grecesc 2% (sos)"],["5g","muștar"],["Asamblare","2 chifle, salată, castraveți murați"]],steps:["Condimentează carnea, formează 2 chiftele. Lasă 15 min la congelator.","Tăvălește prin fulgii de porumb condimentați.","Coace 15 min la 190°C sau 12 min air fryer 200°C.","Amestecă sosul (iaurt + muștar). Asamblează burgerul."],tip:""},
+ 
+luN4:{slot:"Prânz",name:"Somon la Tigaie cu Salată de Avocado",bKcal:390,p:34,f:24,c:8,tags:["omega-3 DHA+EPA","anti-inflamator"],horm:"Somonul — cea mai bogată sursă de omega-3 DHA și EPA, esențiali pentru reglarea ciclului hormonal și reducerea inflamației.",ing:[["150g","file de somon"],["1 ling.","ulei de măsline"],["1 cățel","usturoi zdrobit"],["Sare","piper, boia afumată"],["80g","avocado, cuburi"],["½ buc","castravete, cuburi"],["Zeamă","de la 1 lămâie"],["Frunze","rucola"]],steps:["Pat uscat somonul cu prosop de hârtie.","Condimentează cu sare, piper și boia.","Încinge uleiul la foc mare. Pune somonul cu pielea în jos, 4 minute fără să miști.","Întoarce și gătește 2-3 minute. Servește cu salata de avocado."],tip:"Somonul gata: se desprinde ușor cu spatula. Dacă rezistă, mai are nevoie de 1 minut."},
+ 
+luN5:{slot:"Prânz",name:"Lasagna Sănătoasă cu Carne și Cottage",bKcal:480,p:61,f:15,c:38,tags:["calciu","proteine"],horm:"",ing:[["120g","carne tocată vită slabă"],["Ceapă","morcov, țelină, tocate"],["6 căței","usturoi"],["100g","roșii cuburi (conservă) + 10g pastă roșii"],["Condimente","italiene, sare, piper"],["100g","cottage cheese light + 10g parmezan"],["4 foi","lasagna + 20g cașcaval light"]],steps:["Călește ceapa, morcovul, țelina 5 min. Adaugă usturoi + carne.","Adaugă roșiile, condimentele. Fierbe 15-20 min.","Amestecă cottage cu parmezanul.","Montează: sos → foi → cremă brânza. Repetă. Final: cașcaval.","Coace acoperit 25 min 180°C, apoi 10-15 min fără folie."],tip:"Lasagna e mai bună a doua zi — fă o tavă întreagă!"},
+ 
+luN6:{slot:"Prânz",name:"Sarmale Proteice în Foi de Varză Acră",bKcal:300,p:32,f:10,c:24,tags:["probiotice","detox estrogen"],horm:"Varza acră fermentată conține probiotice naturale și indoli cu efect de detoxifiere a estrogenului în exces.",ing:[["130g","carne tocată curcan sau vită slabă"],["40g","orez fiert"],["50g","ceapă călită"],["Condimente","cimbru, piper, boia, foi de dafin"],["3-4 foi","varză murată"],["100ml","suc de roșii"]],steps:["Amestecă carnea cu orezul, ceapa și condimentele.","Taie nervurile groase, pune umplutură și rulează.","Așază în cratiță cu apă + suc roșii + foi de dafin.","Fierbe la foc mic 90-120 minute."],tip:"Varza murată = probiotice naturale. Nu o clăti prea mult."},
+ 
+luN7:{slot:"Prânz",name:"Mac & Cheese cu Pui Crocant Honey Buffalo",bKcal:492,p:36,f:16,c:47,tags:["proteine","satiație"],horm:"",ing:[["100g","piept pui, cuburi"],["20g","fulgi porumb + 1 ou"],["50g","paste integrale"],["80g","cottage cheese degresat"],["30ml","lapte"],["1 ling.","miere + 1 ling. sos iute (glazură)"],["Ceapă verde","decor"]],steps:["Trece puiul prin ou bătut, apoi prin fulgii de porumb condimentați. Air fryer 200°C 12 min.","Fierbe pastele.","Amestecă cottage + lapte la foc mic 3-4 min până se leagă sosul.","Glazurează puiul cu miere + sos iute. Servește pe mac&cheese."],tip:""},
+ 
+luP1:{slot:"Prânz",name:"Bol cu Năut, Ardei Copt și Tahini cu Turmeric",bKcal:390,p:16,f:14,c:48,veg:true,tags:["anti-inflamator","detox hormonal"],horm:"Turmericul reduce inflamația sistemică care perturbă echilibrul hormonal. Adaugă piper negru — crește absorbția curcuminei de 2000x.",ing:[["200g","năut fiert (conservă, clătit)"],["1 buc","ardei roșu copt și curățat"],["2 ling.","tahini"],["1 ling.","ulei de măsline"],["½ ling.","turmeric pudră"],["Zeamă","de la 1 lămâie"],["1 cățel","usturoi zdrobit"],["Sare","piper negru, pătrunjel"]],steps:["Coace ardeiul la 200°C 20 min. Curăță coaja, taie fâșii.","Pregătește dressingul: tahini + ulei + turmeric + lămâie + usturoi. Diluează cu apă.","Pune năutul în bol, adaugă ardeiul copt, toarnă dressingul.","Finalizează cu pătrunjel proaspăt."],tip:"Adaugă mereu un praf de piper negru lângă turmeric pentru absorbție maximă."},
+ 
+luP2:{slot:"Prânz",name:"Wrap cu Tofu Afumat, Avocado și Legume",bKcal:440,p:19,f:19,c:36,veg:true,tags:["proteine vegetale","grăsimi sănătoase"],horm:"",ing:[["100g","tofu afumat, fâșii"],["60g","lipie integrală"],["40g","avocado"],["50g","mix salată verde"],["50g","castraveți"],["1 ling.","tahini"],["Zeamă","de la ½ lămâie, sare, piper"]],steps:["Rumenește tofu 3-4 minute per parte în tigaie antiaderentă.","Amestecă tahini cu lămâia și 2 ling. apă până e cremos.","Încălzește lipia. Întinde tahini pe ea.","Adaugă avocado zdrobit, salata, castravetele, tofu. Rulează."],tip:""},
+ 
+luP3:{slot:"Prânz",name:"Fasole Bătută cu Usturoi și Ulei de Măsline",bKcal:320,p:14,f:9,c:44,veg:true,tags:["fitoestrogeni blânzi","fibre"],horm:"Fasolea albă conține fitoestrogeni blânzi și fibre solubile care reglează metabolismul hormonal și susțin microbiomul.",ing:[["200g","fasole albă fiartă"],["3 căței","usturoi"],["2 ling.","ulei de măsline extra virgin"],["Zeamă","de la ½ lămâie"],["Sare","piper, cimbru"],["2 felii","pâine integrală prăjită"],["Boia afumată","pentru decor"]],steps:["Pasează fasolea cu usturoi, sare, lămâie și 1 ling. ulei.","Adaugă apă caldă dacă vrei textură mai fluidă.","Prăjește pâinea. Întinde generos pasta.","Stropește cu a doua lingură de ulei, presară boia."],tip:"Fasole din conservă e la fel de bună. Clătește bine sub jet de apă."},
+ 
+luP4:{slot:"Prânz",name:"Supă Cremă de Linte Roșie cu Ghimbir",bKcal:310,p:14,f:9,c:44,veg:true,tags:["fier","echilibru hormonal"],horm:"Lintea roșie conține fier + folat esențiale pentru sinteza dopaminei și serotoninei. Ghimbirul reduce inflamația hormonală.",ing:[["100g","linte roșie uscată"],["200ml","lapte de cocos light"],["1 buc","ceapă tocată"],["2 căței","usturoi"],["1 ling.","ghimbir proaspăt ras"],["½ ling.","turmeric + ½ chimion"],["1 ling.","ulei de cocos"],["Sare","piper"]],steps:["Călește ceapa în ulei 3-4 min. Adaugă usturoi, ghimbir, turmeric, chimion. 1 minut.","Adaugă lintea clătită și 400ml apă. Fierbe 20-25 min.","Adaugă laptele de cocos. Mixează cu blenderul de mână.","Ajustează condimentele. Servește cu fir de ulei de măsline."],tip:"Supa se păstrează 3 zile la frigider și îngheață excelent."},
+ 
+luP5:{slot:"Prânz",name:"Salată Caldă de Linte cu Spanac și Lămâie",bKcal:320,p:16,f:9,c:42,veg:true,tags:["fier non-hem","serotonină"],horm:"Spanacul conține folat esențial pentru sinteza serotoninei și dopaminei.",ing:[["150g","linte verde fiartă"],["80g","spanac proaspăt"],["100g","roșii cherry"],["30g","ceapă roșie feliată subțire"],["1 ling.","ulei de măsline"],["Zeamă","de la 1 lămâie"],["1 ling.","miere"],["Sare","piper, coriandru măcinat"]],steps:["Pregătește dressingul: ulei + lămâie + miere + sare + piper.","Încălzește lintea în tigaie 2-3 min. Adaugă spanacul, amestecă 30 secunde.","Ia de pe foc. Adaugă roșiile și ceapa roșie.","Toarnă dressingul, amestecă ușor."],tip:""},
+ 
+luP6:{slot:"Prânz",name:"Supă de Roșii cu Busuioc și Năut Crocant",bKcal:250,p:12,f:7,c:34,veg:true,tags:["licopen","protecție hormonală"],horm:"Roșiile conțin licopen — antioxidant care protejează receptorii hormonali.",ing:[["400g","roșii sau conservă roșii"],["100g","năut fiert"],["1 buc","ceapă tocată"],["3 căței","usturoi"],["200ml","apă"],["1 ling.","ulei de măsline"],["Busuioc","proaspăt, sare, piper"]],steps:["Coace năutul cu ulei + sare + boia la 200°C 25-30 min până devine crocant.","Călește ceapa 4-5 min, adaugă usturoiul 1 min.","Adaugă roșiile și apa. Fierbe 20 min. Mixează cu blenderul.","Servește cu năut crocant deasupra."],tip:"Năutul crocant face supa din simplă în spectaculoasă."},
+ 
+luP7:{slot:"Prânz",name:"Bol cu Halloumi și Năut cu Dressing Balsamic",bKcal:351,p:17,f:15,c:36,veg:true,tags:["calciu","proteine vegetale"],horm:"",ing:[["60g","halloumi light"],["80g","năut fiert"],["50g","morcov"],["50g","ardei gras"],["50g","salată verde"],["5ml","ulei de măsline"],["10ml","oțet balsamic"],["5g","miere"]],steps:["Prăjește halloumi fără ulei, 2-3 min pe fiecare parte.","Taie legumele și amestecă cu năutul.","Pregătește dressingul: oțet + ulei + miere.","Adaugă halloumi și toarnă dressingul."],tip:""},
+ 
+dnN1:{slot:"Seară",name:"Pulpe de Pui Miere BBQ cu Cartofi Crocanți",bKcal:390,p:40,f:8,c:38,tags:["proteine","potasiu"],horm:"",ing:[["200g","pulpe pui dezosate, fără piele"],["80g","sos BBQ fără zahăr"],["1 ling.","miere"],["Condimente","sare, piper, boia, usturoi"],["200g","cartofi cuburi, condimentați"]],steps:["Amestecă sosul BBQ cu mierea și condimentele. Marinează puiul 10 min.","Coace la 200°C 22-25 min.","Condimentează cartofii și gătește în air fryer 180°C 25-30 min."],tip:"Cartofi extra crocanți: lasă-i 2-3 minute la aer înainte de servire."},
+ 
+dnN2:{slot:"Seară",name:"Tocăniță de Pui cu Mazăre și Morcov",bKcal:310,p:33,f:8,c:24,tags:["satiație"],horm:"",ing:[["150g","piept pui, cuburi"],["100g","mazăre fiartă"],["70g","morcov rondele"],["1 buc","ceapă + 2 căței usturoi"],["150ml","suc de roșii"],["1 ling.","ulei de măsline"],["Sare","piper, cimbru, boia afumată, pătrunjel"]],steps:["Călești ceapa și morcovul în ulei + 2 ling. apă, 5 minute.","Adaugă usturoiul și puiul. Rumenești 3-4 minute.","Toarnă sucul de roșii, adaugă mazărea și condimentele.","Fierbi la foc mic 15-20 minute. Presari pătrunjel."],tip:""},
+ 
+dnN3:{slot:"Seară",name:"Omletă Proteică cu Cașcaval și Legume",bKcal:300,p:26,f:17,c:13,tags:["proteine","vitamina D"],horm:"",ing:[["2 buc","ouă"],["18g","cașcaval light ras"],["1 felie","șuncă curcan (40g)"],["36g","ciuperci feliate"],["36g","roșii cherry sau ardei"],["1 felie","pâine integrală"],["1 ling.","ulei de măsline, sare, piper, oregano"]],steps:["Călește legumele în ulei 2-3 minute.","Toarnă ouăle bătute cu condimentele. Adaugă șunca.","Gătește la foc mic 2-3 minute fără să amesteci.","Adaugă cașcavalul în ultimele 30 secunde."],tip:""},
+ 
+dnN4:{slot:"Seară",name:"Ruladă de Dovlecei cu 3 Ingrediente",bKcal:330,p:28,f:18,c:12,tags:["proteine","legume"],horm:"",ing:[["3-4 buc","dovlecei mari (~500g)"],["3 buc","ouă"],["120g","cașcaval light ras"],["Sare","piper"],["100g","mozzarella light (umplutură)"],["150g","șuncă slabă (umplutură)"]],steps:["Rade dovleceii, stoarce apa în exces.","Amestecă cu ouăle, cașcavalul, condimentele. Coace pe tavă 180°C 25 min.","Adaugă umplutura pe blat cald. Rulează. Coace 10 minute."],tip:"Se păstrează 2 zile la frigider."},
+ 
+dnN5:{slot:"Seară",name:"Fasole Bătută cu Mușchi Afumat",bKcal:340,p:24,f:18,c:22,tags:["fibre","fier"],horm:"",ing:[["110g","fasole fiartă"],["1 cățel","usturoi"],["1 ling.","ulei de măsline"],["90g","mușchi afumat slab"],["30g","ceapă călită"]],steps:["Pasează fasolea cu usturoi, sare și 1 ling. ulei.","Rumenește mușchiul ușor în tigaie.","Pune ceapa călită deasupra.","Servește cald cu pátrunjel și boia dulce."],tip:""},
+ 
+dnP1:{slot:"Seară",name:"Salată de Vinete cu Tahini pe Lipie",bKcal:290,p:8,f:16,c:28,veg:true,tags:["grăsimi sănătoase"],horm:"",ing:[["2 buc","vinete medii (~400g)"],["2 ling.","tahini"],["1 cățel","usturoi zdrobit"],["Zeamă","de la 1 lămâie"],["Sare","după gust"],["1 buc","lipie integrală"]],steps:["Coace vinetele pe flacăra aragazului sau la 220°C 20-25 min.","Lasă să se răcească, curăță coaja. Lasă la scurs 20 minute.","Toacă mărunt cu cuțit din lemn sau plastic.","Amestecă cu tahini, usturoi, lămâie, sare. Servește pe lipie încălzită."],tip:"Scurgerea vinetelor e esențială — cu cât mai mult, cu atât mai cremoasă."},
+ 
+dnP2:{slot:"Seară",name:"Budincă de Chia cu Cacao și Banană",bKcal:320,p:10,f:14,c:44,veg:true,tags:["magneziu","energie"],horm:"Cacaoa conține magneziu esențial pentru producerea progesteronului și reducerea sindromului premenstrual.",ing:[["45g","semințe de chia"],["200ml","lapte de ovăz"],["1 buc","banană coaptă (100g)"],["10g","cacao pudră"],["1 ling.","miere"]],steps:["Amestecă chia cu laptele. Lasă 3 min, amestecă din nou.","Pune la frigider minim 30 min sau peste noapte.","Pasează banana cu cacaoa și mierea.","Amestecă cu budinca sau pune deasupra."],tip:""},
+ 
+dnP3:{slot:"Seară",name:"Hummus Clasic cu Morcovi Crocanți",bKcal:240,p:10,f:10,c:28,veg:true,tags:["fibre","proteine vegetale"],horm:"",ing:[["200g","năut fiert"],["2 ling.","tahini"],["2 căței","usturoi"],["Zeamă","de la 1 lămâie"],["3 ling.","ulei de măsline"],["Sare","boia, chimion"],["2-3 buc","morcovi, bastonașe"]],steps:["Mixează năutul cu tahinul, usturoiul, lămâia și sarea în blender 2-3 minute.","Adaugă treptat apă rece (4-6 ling.) și 2 ling. ulei. Continuă să mixezi.","Transferă în bol, stropește cu ulei, presară boia.","Servește cu morcovii crocanți."],tip:"Secretul hummus-ului cremos: apă rece și mixare lungă."},
+ 
+dnP4:{slot:"Seară",name:"Guacamole cu Legume Crocante",bKcal:180,p:3,f:14,c:12,veg:true,tags:["grăsimi esențiale"],horm:"Avocado furnizează acizi grași mononesaturați esențiali pentru producerea hormonilor steroizi.",ing:[["1 buc","avocado copt"],["1 buc","roșie mică, tocată"],["¼ buc","ceapă roșie, tocată fin"],["Zeamă","de la 1 lime"],["Sare","piper, chili"],["Legume","ardei, castraveți, morcovi pentru dipuit"]],steps:["Zdrobește avocado cu o furculiță (textură rustică e mai bună).","Adaugă roșia, ceapa, zeama de lime, sare, piper și chili.","Servește imediat cu legumele tăiate bastonașe."],tip:"Consumă în 30 minute sau acoperă direct cu peliculă să nu se oxideze."},
+ 
+sn1:{slot:"Gustare",name:"Iaurt Grecesc cu Scorțișoară și Mere",bKcal:300,p:36,f:7,c:38,tags:["probiotice"],horm:"",ing:[["350g","iaurt grecesc 2%"],["2 buc","mere mici, cuburi"],["Scorțișoară","pudră"],["½ ling.","miere"]],steps:["Pune iaurtul în bol.","Adaugă merele și scorțișoara.","Stropește cu miere."],tip:""},
+ 
+sn2:{slot:"Gustare",name:"Cremă de Iaurt cu Cacao și Unt de Arahide",bKcal:220,p:14,f:9,c:22,tags:["magneziu","serotonină"],horm:"Cacaoa neagră conține magneziu, mineral esențial pentru producerea progesteronului.",ing:[["200g","iaurt grecesc 2%"],["1 ling.","cacao pudră neagră"],["1 ling.","unt de arahide natural"],["1 ling.","miere"],["Un praf","scorțișoară"]],steps:["Amestecă toate ingredientele cu un tel mic.","Ajustează dulceața cu miere."],tip:""},
+ 
+sn3:{slot:"Gustare",name:"Mere cu Tahini și Miere",bKcal:180,p:5,f:8,c:22,tags:["microbiom"],horm:"Merele conțin pectină care hrănește bacteriile benefice care reglează metabolismul estrogenului.",ing:[["2 buc","mere"],["2 ling.","tahini"],["1 ling.","miere"],["Un praf","scorțișoară"]],steps:["Taie merele felii.","Amestecă tahini cu mierea.","Servește cu scorțișoară."],tip:""},
+ 
+sn4:{slot:"Gustare",name:"Iaurt cu Nuci și Miere",bKcal:220,p:18,f:10,c:16,tags:["omega-3","fitosteroli"],horm:"Nucile conțin omega-3 ALA și fitosteroli care susțin echilibrul hormonal.",ing:[["200g","iaurt grecesc 2%"],["20g","nuci tocate"],["1 ling.","miere"],["½ ling.","scorțișoară"]],steps:["Pune iaurtul în bol.","Adaugă nucile, mierea și scorțișoara."],tip:""},
+ 
+ds1:{slot:"Desert",name:"Mousse de Avocado cu Cacao și Miere",bKcal:180,p:3,f:14,c:14,dessert:true,tags:["grăsimi hormonale"],horm:"Avocado furnizează grăsimi mononesaturate esențiale pentru producerea hormonilor steroizi.",ing:[["1 buc","avocado copt (120g)"],["2 ling.","cacao pudră neagră"],["1-2 ling.","miere"],["3 ling.","lapte de cocos"],["1 ling.","extract de vanilie"],["Un praf","sare"]],steps:["Scoate miezul avocado și pune-l în blender.","Adaugă cacaoa, mierea, laptele de cocos, vanilia și sarea.","Mixează 1-2 minute până e cremă mătăsoasă.","Răcește 15-20 minute la frigider."],tip:"Cu cât avocado-ul e mai copt, cu atât mousse-ul iese mai cremos."},
+ 
+ds2:{slot:"Desert",name:"Biluțe de Curmale cu Nuci și Cacao",bKcal:160,p:3,f:8,c:20,dessert:true,tags:["energie naturală","magneziu"],horm:"Curmalele furnizează potasiu și magneziu natural.",ing:[["80g","curmale Medjool (4-5 buc), fără sâmburi"],["40g","nuci"],["1 ling.","cacao pudră"],["Un praf","sare"],["Fulgi de cocos","opțional"]],steps:["Mixează în robot curmale, nuci, cacao și sarea.","Formează 6-8 biluțe cu palmele ușor umezite.","Tăvălește prin fulgi de cocos sau cacao. Frigider 20 minute."],tip:"Se păstrează 2 săptămâni la frigider sau 3 luni la congelator."},
+ 
+ds3:{slot:"Desert",name:"Cheesecake la Pahar cu Fructe de Pădure",bKcal:200,p:14,f:8,c:18,dessert:true,tags:["calciu","serotonină"],horm:"Brânza proaspătă furnizează calciu necesar pentru metabolizarea estrogenului.",ing:[["1 buc","biscuit digestiv (15g), sfărâmat"],["5g","unt topit"],["100g","brânza proaspătă slabă (quark)"],["50g","iaurt grecesc 2%"],["1 ling.","miere"],["Esență","vanilie, zeamă ¼ lămâie"],["40g","mix fructe de pădure"]],steps:["Amestecă biscuitul cu untul topit. Apasă pe fundul unui pahar.","Mixează brânza cu iaurtul, mierea, vanilia și lămâia.","Toarnă crema peste baza. Adaugă fructele deasupra.","Lasă minim 20 min la frigider."],tip:"Nu omite zeama de lămâie — transformă gustul lactat în fresh."},
+ 
+ds4:{slot:"Desert",name:"Banane Înghețate cu Unt de Arahide",bKcal:229,p:5,f:11,c:30,dessert:true,tags:["serotonină","triptofan"],horm:"Banana coaptă conține triptofan — precursor direct al serotoninei.",ing:[["1 buc","banană mare coaptă (150g), rondele"],["15g","unt de arahide natural"],["10g","ciocolată neagră >70%, topită"],["Un praf","sare de mare"]],steps:["Taie banana în rondele. Congelator 2 ore.","Scoate, unge cu unt de arahide.","Stropește cu ciocolată topită și sare de mare. Servește imediat."],tip:"Dacă nu ai timp, servește la temperatura camerei — la fel de gustos."},
+ 
+ds5:{slot:"Desert",name:"Mini Cheesecake cu Iaurt Grecesc",bKcal:280,p:18,f:10,c:30,dessert:true,tags:["proteine","calciu"],horm:"",ing:[["1 buc","ou"],["130g","iaurt grecesc 2%"],["1 ling.","miere"],["30g","ovăz măcinat"],["½ ling.","praf de copt"],["Fructe de pădure","sau fulgi ciocolată pentru topping"]],steps:["Amestecă oul, iaurtul, mierea, ovăzul, praful de copt.","Toarnă în formă mică.","Gătește: 2-3 min microunde sau 25 min cuptor 180°C.","Lasă 10-15 min la răcit."],tip:"Adaugă extract de vanilie pentru gust mai bogat."},
+ 
+ds6:{slot:"Desert",name:"Tarte de Ciocolată Neagră cu Fructe",bKcal:210,p:4,f:11,c:24,dessert:true,tags:["serotonină","anti-cortisol"],horm:"Ciocolata neagră >70% crește serotonina și reduce cortisolul — hormonul stresului.",ing:[["3 ling.","cacao pudră neagră"],["2 ling.","ulei de cocos topit"],["2 ling.","miere"],["Un praf","sare de mare"],["50g","mix fructe de pădure"]],steps:["Amestecă cacaoa cu uleiul de cocos topit, mierea și sarea.","Toarnă în pahare mici.","Adaugă fructele deasupra.","Frigider minim 30 minute."],tip:"Cu cât cacaoa e mai neagră, cu atât mai mulți antioxidanți."},
+ 
+ds7:{slot:"Desert",name:"Clătite Dulci cu Brânza și Mere Coapte",bKcal:349,p:23,f:9,c:42,dessert:true,tags:["calciu","fibre"],horm:"",ing:[["1 buc","ou"],["30g","făină de ovăz"],["100ml","lapte"],["60g","brânza dulce 5%"],["100g","măr"],["Scorțișoară","și miere"]],steps:["Amestecă oul, făina și laptele. Gătește 2 clătite.","Călește mărul cuburi cu scorțișoară și miere 2-3 min.","Amestecă mărul cu brânza dulce.","Umple clătitele."],tip:"Adaugă ghimbir pudră pentru gust de toamnă."},
+ 
+ds8:{slot:"Desert",name:"Tiramisu Light cu Espresso și Iaurt",bKcal:230,p:10,f:10,c:26,dessert:true,tags:["antioxidanți","calciu"],horm:"",ing:[["1 shot","espresso tare (40ml), răcit"],["6 buc","biscuiți savoiardi"],["100g","mascarpone light"],["50g","iaurt grecesc 2%"],["1 ling.","miere"],["1 ling.","cacao pudră"]],steps:["Amestecă mascarpone cu iaurtul și mierea.","Înmoaie rapid fiecare biscuit în espresso (1-2 secunde).","Aranjează biscuiți → cremă → biscuiți → cremă.","Presară cacao. Frigider minim 2 ore."],tip:"1-2 secunde în espresso, nu mai mult."},
+ 
+ds9:{slot:"Desert",name:"Snickers Light cu Unt de Arahide",bKcal:191,p:5,f:9,c:21,dessert:true,tags:["energie naturală"],horm:"",ing:[["2 buc","rondele orez expandat, sfărâmate"],["80g","unt de arahide natural"],["60g","miere"],["20g","arahide prăjite, tocate"],["20g","ciocolată neagră >75%, topită"],["25g","cacao pudră"],["80ml","lapte"]],steps:["Amestecă rondelele cu untul de arahide, mierea și arahidele. Tasează în formă.","Topește ciocolata + lapte + cacao + sare. Amestecă.","Toarnă deasupra. Frigider 30 min. Taie în 6 bucăți."],tip:"Se păstrează la congelator 3 luni."},
+ 
+ds10:{slot:"Desert",name:"Îngheţată Proteică cu Iaurt și Scorțișoară",bKcal:220,p:18,f:4,c:28,dessert:true,tags:["proteine","răcoritoare"],horm:"",ing:[["200g","iaurt grecesc 0%"],["1 ling.","miere"],["30ml","lapte de migdale"],["1 ling.","scorțișoară"]],steps:["Pune toate ingredientele în blender.","Mixează 1-2 minute până e cremă fină.","Congelator 1 oră. Amestecă înainte de servire."],tip:""}
+};
+ 
+// ═══════════════════════════════════════════════════
+// PLAN STRUCTURE (4 weeks)
+// ═══════════════════════════════════════════════════
+const PLAN=[
+[[{t:'post',bf:'bfP1',lu:'luP1',dn:'dnP1',sn:'',ds:'ds1'},{t:'norm',bf:'bfN1',lu:'luN1',dn:'dnN1',sn:'sn2',ds:'ds2'},{t:'post',bf:'bfP2',lu:'luP2',dn:'dnP2',sn:'',ds:'ds3'},{t:'norm',bf:'bfN2',lu:'luN2',dn:'dnN2',sn:'sn1',ds:'ds4'},{t:'post',bf:'bfP3',lu:'luP3',dn:'dnP3',sn:'',ds:'ds5'},{t:'norm',bf:'bfN3',lu:'luN3',dn:'dnN3',sn:'sn4',ds:'ds6'},{t:'norm',bf:'bfN4',lu:'luN4',dn:'dnN4',sn:'sn3',ds:'ds7'}]],
+[[{t:'post',bf:'bfP4',lu:'luP4',dn:'dnP4',sn:'',ds:'ds8'},{t:'norm',bf:'bfN5',lu:'luN5',dn:'dnN5',sn:'sn2',ds:'ds9'},{t:'post',bf:'bfP5',lu:'luP5',dn:'dnP1',sn:'',ds:'ds10'},{t:'norm',bf:'bfN6',lu:'luN6',dn:'dnN1',sn:'sn1',ds:'ds1'},{t:'post',bf:'bfP1',lu:'luP6',dn:'dnP2',sn:'',ds:'ds2'},{t:'norm',bf:'bfN7',lu:'luN7',dn:'dnN2',sn:'sn4',ds:'ds3'},{t:'norm',bf:'bfN8',lu:'luN1',dn:'dnN3',sn:'sn3',ds:'ds4'}]],
+[[{t:'post',bf:'bfP2',lu:'luP7',dn:'dnP3',sn:'',ds:'ds5'},{t:'norm',bf:'bfN1',lu:'luN4',dn:'dnN4',sn:'sn2',ds:'ds6'},{t:'post',bf:'bfP3',lu:'luP1',dn:'dnP4',sn:'',ds:'ds7'},{t:'norm',bf:'bfN3',lu:'luN2',dn:'dnN5',sn:'sn1',ds:'ds8'},{t:'post',bf:'bfP4',lu:'luP2',dn:'dnP1',sn:'',ds:'ds9'},{t:'norm',bf:'bfN5',lu:'luN5',dn:'dnN1',sn:'sn4',ds:'ds10'},{t:'norm',bf:'bfN2',lu:'luN6',dn:'dnN2',sn:'sn3',ds:'ds1'}]],
+[[{t:'post',bf:'bfP5',lu:'luP3',dn:'dnP2',sn:'',ds:'ds2'},{t:'norm',bf:'bfN6',lu:'luN3',dn:'dnN3',sn:'sn2',ds:'ds3'},{t:'post',bf:'bfP1',lu:'luP4',dn:'dnP3',sn:'',ds:'ds4'},{t:'norm',bf:'bfN7',lu:'luN7',dn:'dnN4',sn:'sn1',ds:'ds5'},{t:'post',bf:'bfP2',lu:'luP5',dn:'dnP4',sn:'',ds:'ds6'},{t:'norm',bf:'bfN4',lu:'luN1',dn:'dnN5',sn:'sn4',ds:'ds7'},{t:'norm',bf:'bfN8',lu:'luN2',dn:'dnN1',sn:'sn3',ds:'ds8'}]]
+];
+ 
+const WN=['Săptămâna 1','Săptămâna 2','Săptămâna 3','Săptămâna 4'];
+const DL=['Lun','Mar','Mie','Joi','Vin','Sâm','Dum'];
+const ING_IC=`<svg viewBox="0 0 8 8"><circle cx="4" cy="4" r="2"/></svg>`;
+const CHV=`<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 4l3.5 3.5L9 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+ 
+function scaledKcal(r,factor){return Math.round(r.bKcal*factor);}
+function adjIng(r,factor){
+  if(Math.abs(factor-1)<0.05) return r.ing;
+  return r.ing.map(([q,n])=>{
+    const num=parseFloat(q);
+    if(isNaN(num)) return [q,n];
+    const scaled=Math.round(num*factor*10)/10;
+    return [q.replace(/[\d.]+/,scaled),n];
+  });
+}
+ 
+function buildRecipe(key,factor,dayKcal,postDay){
+  const r=RECIPES[key]; if(!r) return '';
+  const isDessert=!!r.dessert;
+  const adjK=scaledKcal(r,factor);
+  const ing=adjIng(r,factor);
+  return `<div class="mc${isDessert?' dessert':''}" onclick="toggleMC(this)">
 <div class="mc-hdr">
-<div class="mc-meta">
+<div class="mc-left">
 <div class="mc-type${isDessert?' d':''}">${r.slot}</div>
 <div class="mc-name">${r.name}</div>
-<div class="mc-sub">~${r.kcal} kcal · ${r.p}g proteină · ${r.f}g grăsimi · ${r.c}g carbo</div>`;
-  if (r.tags && r.tags.length) {
-    html += `<div class="mc-tags">`;
-    r.tags.forEach(t=>{ html+=`<span class="tag">${t}</span>`; });
-    html += `</div>`;
-  }
-  html += `</div><div class="chev">${CHV}</div></div>
+<div class="mc-info"><span>~${adjK} kcal</span><span>${Math.round(r.p*factor)}g proteină</span><span>${Math.round(r.f*factor)}g grăsimi</span></div>
+${r.tags&&r.tags.length?`<div class="mc-tags">${r.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`:''}
+</div><div class="chev">${CHV}</div>
+</div>
 <div class="mc-body">
 <div class="tabs">
 <div class="tab on" onclick="swTab(event,this,'i')">Ingrediente</div>
 <div class="tab" onclick="swTab(event,this,'p')">Preparare</div>
 <div class="tab" onclick="swTab(event,this,'n')">Nutriție</div>
 </div>
-<div class="panel on" data-t="i"><ul class="ings">`;
-  r.ing.forEach(([q,nm])=>{ html+=`<li class="ing"><div class="ing-ic">${ING_IC}</div><span class="ing-q">${q}</span><span class="ing-nm">${nm}</span></li>`; });
-  html += `</ul></div><div class="panel" data-t="p"><ol class="steps">`;
-  r.steps.forEach((s,i)=>{ html+=`<li class="step"><div class="sn">${i+1}</div><span>${s}</span></li>`; });
-  html += `</ol>`;
-  if (r.tip) html += `<div class="tip-box"><strong>Sfat bucătar:</strong> ${r.tip}</div>`;
-  html += `</div><div class="panel" data-t="n"><div class="macros">
-<div class="mac"><div class="mac-v">${r.kcal}</div><div class="mac-l">Kcal</div></div>
-<div class="mac"><div class="mac-v">${r.p}g</div><div class="mac-l">Proteine</div></div>
-<div class="mac"><div class="mac-v">${r.f}g</div><div class="mac-l">Grăsimi</div></div>
-<div class="mac"><div class="mac-v">${r.c}g</div><div class="mac-l">Carbo</div></div>
-</div>`;
-  if (r.horm) html += `<div class="horm-box"><strong>Efect hormonal:</strong> ${r.horm}</div>`;
-  html += `</div></div></div>`;
-  return html;
+<div class="panel on" data-t="i"><ul class="ings">${ing.map(([q,nm])=>`<li class="ing"><div class="ing-ic">${ING_IC}</div><span class="ing-q">${q}</span><span>${nm}</span></li>`).join('')}</ul></div>
+<div class="panel" data-t="p"><ol class="steps-ol">${r.steps.map((s,i)=>`<li class="step"><div class="sn">${i+1}</div><span>${s}</span></li>`).join('')}</ol>${r.tip?`<div class="tip-box"><strong>Sfat:</strong> ${r.tip}</div>`:''}</div>
+<div class="panel" data-t="n">
+<div class="macros">
+<div class="mac"><div class="mv">${adjK}</div><div class="ml">Kcal</div></div>
+<div class="mac"><div class="mv">${Math.round(r.p*factor)}g</div><div class="ml">Proteine</div></div>
+<div class="mac"><div class="mv">${Math.round(r.f*factor)}g</div><div class="ml">Grăsimi</div></div>
+<div class="mac"><div class="mv">${Math.round(r.c*factor)}g</div><div class="ml">Carbo</div></div>
+</div>
+${r.horm?`<div class="horm-box"><strong>Efect hormonal:</strong> ${r.horm}</div>`:''}
+${Math.abs(factor-1)>0.05?`<div class="adj-note">Porție ajustată la ${U.target} kcal/zi (factor ${factor.toFixed(2)}×)</div>`:''}
+</div>
+</div></div>`;
 }
-
-function buildDayView(weekIdx, dayIdx, show) {
-  const d = STRUCTURE[weekIdx][dayIdx];
-  const isPost = d.type === 'post';
-  const totalKcal = kcalDay(d);
-  let html = `<div class="dview${show?' on':''}" id="dv_${weekIdx}_${dayIdx}">
+ 
+function buildDayView(wi,di,show){
+  const d=PLAN[wi][0][di];
+  const isPost=d.t==='post';
+  const targetKcal=isPost?U.postTarget:U.target;
+  // Calculate base kcal for this day's meals
+  const keys=[d.bf,d.lu,d.dn,d.sn,d.ds].filter(Boolean);
+  const baseTotal=keys.reduce((s,k)=>{
+    const r=RECIPES[k]; return s+(r?r.bKcal:0);
+  },0);
+  const factor=baseTotal>0?targetKcal/baseTotal:1;
+  const clampedFactor=Math.min(Math.max(factor,0.6),1.6);
+  const filledKcal=Math.round(baseTotal*clampedFactor);
+  const fillPct=Math.min(100,Math.round(filledKcal/targetKcal*100));
+ 
+  let html=`<div class="dview2${show?' on':''}" id="dv${wi}_${di}">
 <div class="day-top">
 <div class="dtype ${isPost?'post':'norm'}">${isPost?'Zi de post · Vegan':'Zi normală'}</div>
-<div class="kcal-n">~${totalKcal}</div>
-<div class="kcal-u">kcal total${isPost?' · fără carne, ouă, lactate':''}</div>`;
-  if (isPost) html += `<div class="post-note"><strong>Miere permisă!</strong> Evită doar: carne, pește, ouă, lactate. Mierea este produs vegetal și rămâne în meniu.</div>`;
-  html += `</div>`;
-
-  // Mese principale
-  html += `<div class="sec-hdr">Mese principale</div>`;
-  html += buildRecipe(d.bf);
-  html += buildRecipe(d.lu);
-  if (d.sn) html += buildRecipe(d.sn, true);
-  html += buildRecipe(d.dn);
-
-  // Desert
-  html += `<div class="sec-hdr">Desert zilnic</div>`;
-  html += buildRecipe(d.ds);
-
-  html += `</div>`;
+<div class="kcal-day">~${filledKcal}</div>
+<div class="kcal-budget">
+  <span>din ${targetKcal} kcal</span>
+  <div class="budget-bar"><div class="budget-fill" style="width:${fillPct}%"></div></div>
+  <span>${fillPct}%</span>
+</div>
+${isPost?`<div class="post-note"><strong>Miere permisă!</strong> Evită: carne, pește, ouă, lactate. Porțiile sunt ajustate la ${U.postTarget} kcal.</div>`:''}
+</div>
+<div class="sec-hdr">Mese principale</div>
+${buildRecipe(d.bf,clampedFactor,targetKcal,isPost)}
+${buildRecipe(d.lu,clampedFactor,targetKcal,isPost)}
+${d.sn?buildRecipe(d.sn,clampedFactor,targetKcal,isPost):''}
+${buildRecipe(d.dn,clampedFactor,targetKcal,isPost)}
+<div class="sec-hdr">Desert zilnic</div>
+${buildRecipe(d.ds,clampedFactor,targetKcal,isPost)}
+</div>`;
   return html;
 }
-
-function buildWeekView(weekIdx, show) {
-  let html = `<div class="wview${show?' on':''}" id="wv_${weekIdx}">`;
-
-  // Day nav
-  html += `<div class="day-nav" id="dnav_${weekIdx}">`;
-  STRUCTURE[weekIdx].forEach((d,di)=>{
-    const isPost = d.type==='post';
-    const active = di===0;
-    html += `<button class="dpill${active?' on':''}" onclick="showDay(${weekIdx},${di})">
-<span class="da">${DAY_LABELS[di]}</span>
-<span class="dn">${di+1}</span>
-<span class="dt ${isPost?'p':'n'}"></span>
-</button>`;
+ 
+function buildApp(){
+  // Header
+  document.getElementById('appName').textContent=`${U.gender==='F'?'Plan Feminin':'Plan Masculin'} · ${U.weight}kg → ${U.targetWeight}kg`;
+  document.getElementById('appStats').innerHTML=`
+<div class="hdr-stat"><div class="sv">${U.target}</div><div class="sl">kcal normal</div></div>
+<div class="hdr-stat"><div class="sv">${U.postTarget}</div><div class="sl">kcal post</div></div>
+<div class="hdr-stat"><div class="sv">${U.weeks||'—'}</div><div class="sl">săptămâni</div></div>
+<div class="hdr-stat"><div class="sv">${Math.abs(U.weight-U.targetWeight)}kg</div><div class="sl">de slăbit</div></div>`;
+ 
+  const wt=document.getElementById('wTabs');
+  const wv=document.getElementById('wViews');
+  wt.innerHTML=''; wv.innerHTML='';
+ 
+  PLAN.forEach((week,wi)=>{
+    // Week tab
+    const btn=document.createElement('button');
+    btn.className='wtab'+(wi===0?' on':'');
+    btn.textContent=WN[wi];
+    btn.onclick=()=>showWeek(wi);
+    wt.appendChild(btn);
+ 
+    // Week view
+    let whtml=`<div class="wview${wi===0?' on':''}" id="wv${wi}">`;
+    // Day nav
+    whtml+=`<div class="day-nav" id="dn${wi}">`;
+    week[0].forEach((d,di)=>{
+      whtml+=`<button class="dpill${di===0?' on':''}" onclick="showDay(${wi},${di})">
+<span class="da">${DL[di]}</span><span class="dn">${di+1}</span>
+<span class="dt ${d.t==='post'?'p':'n'}"></span></button>`;
+    });
+    whtml+=`</div><div class="content">`;
+    week[0].forEach((_,di)=>{ whtml+=buildDayView(wi,di,di===0); });
+    whtml+=`</div></div>`;
+    wv.innerHTML+=whtml;
   });
-  html += `</div>`;
-
-  // Day views
-  html += `<div class="content">`;
-  STRUCTURE[weekIdx].forEach((_,di)=>{
-    html += buildDayView(weekIdx, di, di===0);
-  });
-  html += `</div></div>`;
-  return html;
 }
-
-// Render
-const wTabs = document.getElementById('wTabs');
-const wViews = document.getElementById('wViews');
-
-WEEK_NAMES.forEach((nm,wi)=>{
-  const btn = document.createElement('button');
-  btn.className = 'wtab'+(wi===0?' on':'');
-  btn.textContent = nm;
-  btn.onclick = ()=>showWeek(wi);
-  wTabs.appendChild(btn);
-  wViews.innerHTML += buildWeekView(wi, wi===0);
-});
-
-function showWeek(wi) {
+ 
+function showWeek(wi){
   document.querySelectorAll('.wtab').forEach((b,i)=>b.classList.toggle('on',i===wi));
   document.querySelectorAll('.wview').forEach((v,i)=>v.classList.toggle('on',i===wi));
-  curWeek = wi;
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
-function showDay(wi, di) {
-  document.querySelectorAll(`#dnav_${wi} .dpill`).forEach((p,i)=>p.classList.toggle('on',i===di));
-  document.querySelectorAll(`#wv_${wi} .dview`).forEach((v,i)=>v.classList.toggle('on',i===di));
-  curDay[wi] = di;
+function showDay(wi,di){
+  document.querySelectorAll(`#dn${wi} .dpill`).forEach((p,i)=>p.classList.toggle('on',i===di));
+  document.querySelectorAll(`#wv${wi} .dview2`).forEach((v,i)=>v.classList.toggle('on',i===di));
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
-function toggleMC(card) { card.classList.toggle('open'); }
-
-function swTab(e,tab,name) {
+function toggleMC(c){c.classList.toggle('open');}
+function swTab(e,tab,name){
   e.stopPropagation();
-  const body = tab.closest('.mc-body');
+  const body=tab.closest('.mc-body');
   body.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   body.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   tab.classList.add('on');
@@ -706,3 +766,4 @@ function swTab(e,tab,name) {
 </script>
 </body>
 </html>
+ 
